@@ -89,6 +89,11 @@ to a prior deployment**. See [runbook.md](runbook.md#roll-back-a-bad-production-
 
 ## Note on action versions
 
-GitHub may warn that the `actions/*@v4` and `wrangler-action@v3` steps run on Node 20, which is being
-phased out. They're first-party/compatible, so the pipeline keeps working; bump the action major
-versions when convenient.
+The workflow pins the marketplace actions to their current majors — `actions/checkout@v6`,
+`setup-node@v6`, `upload-artifact@v7`, `download-artifact@v8`, and `cloudflare/wrangler-action@v4` —
+all of which run on the **Node.js 24** action runtime. (GitHub began forcing Node 24 on action
+runtimes in June 2026 and removes Node 20 from runners in September 2026; these majors are ahead of
+that.) Note this is the *action runtime*, separate from the **Node 20** we install via `setup-node`
+to build the site. When bumping majors in future, re-check for breaking changes and confirm a
+**staging** deploy goes green (the artifact upload→download handoff and the wrangler deploy both
+exercise the new versions) before promoting.
