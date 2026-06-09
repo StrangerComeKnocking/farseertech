@@ -1,119 +1,93 @@
+<div align="center">
+
 # FarseerTech
 
+**Solving complicated engineering problems, frugally.**
+
+The source for **[farseertech.com](https://farseertech.com)** — the site and field notes of
+FarseerTech, an engineering practice run by Yusuf Tinwala.
+
 [![CI · Deploy](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml/badge.svg)](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml)
+&nbsp;·&nbsp; [Live site](https://farseertech.com)
+&nbsp;·&nbsp; [Docs](docs/)
 
-Source for **[farseertech.com](https://farseertech.com)** — a personal technical
-publication by **Yusuf Tinwala** on building hyperscale, agentic, production-grade
-systems: AIOps, agentic architecture, reliability, product judgment, and
-engineering leadership.
-
-Built with [Astro](https://astro.build) to the brand packet in
-[`docs/guidelines/`](docs/guidelines/): a low-scroll "publication console"
-homepage, a sectioned article reader, command-palette search, warm-paper visual
-system (Newsreader + IBM Plex Mono), and the authored monoline icon set. Output is
-a static site for **Cloudflare Pages**.
+</div>
 
 ---
 
-## Run it
+## What this is
+
+A small, fast, statically-generated site built with [Astro](https://astro.build). It's a
+**publication**, not a SaaS app: a low-scroll, content-first design with one polished field
+note today and room to grow. Output is plain static files served from Cloudflare's edge.
+
+- **Framework** — Astro 5 (static output, near-zero client JS)
+- **Type** — Inter (UI/body) + IBM Plex Mono (labels/code)
+- **Hosting** — Cloudflare Pages, custom domain `farseertech.com`
+- **CI/CD** — GitHub Actions → Cloudflare Pages, with a `staging` preview before production
+
+## Quickstart
 
 Requires **Node.js 18.17+** (or 20+).
 
 ```bash
+git clone https://github.com/StrangerComeKnocking/farseertech.git
+cd farseertech
 npm install
-npm run dev      # http://localhost:4321
+npm run dev          # http://localhost:4321
 ```
 
-| Command           | Does                                  |
-| ----------------- | ------------------------------------- |
-| `npm run dev`     | Dev server with hot reload            |
-| `npm run build`   | Build static site to `dist/`          |
-| `npm run preview` | Serve the production build locally    |
+| Command           | What it does                                  |
+| ----------------- | --------------------------------------------- |
+| `npm run dev`     | Local dev server with hot reload              |
+| `npm run build`   | Production build into `dist/`                 |
+| `npm run preview` | Serve the built `dist/` locally               |
+| `npm run check`   | Type-check the project (`astro check`)        |
 
----
-
-## Content model
-
-Four pillars (defined in `src/consts.ts`): **Field Notes**, **Building
-Organizations**, **Building Product**, **Building Software**. Each post declares
-its pillar and lives at `/<pillar>/<slug>`.
-
-### Writing a post
-
-Add a file to `src/content/posts/`. The **body is plain HTML, split into
-`<section>` blocks** — the reader turns those sections into a navigable, low-scroll
-reading experience (left-rail nav, next/previous, arrow keys).
-
-```markdown
----
-title: "Your headline"
-description: "One or two high-signal sentences (cards, search, OG, RSS)."
-pillar: "field-notes"   # field-notes | building-organizations | building-product | building-software
-date: 2026-06-08
-# Optional:
-sections: ["Thesis", "Pattern", "Mechanism", "Failure Mode", "Control", "Final Take"]
-quote: "A copyable pull quote shown in the right rail."
-featured: true          # eligible to be the weekly highlight
-pinned: true            # force the weekly highlight
-accent: "coral"         # coral | indigo | teal | gold | violet (overrides pillar default)
-draft: true             # hidden in prod, visible in `npm run dev`
----
-
-<section data-title="Thesis">
-  <h2>Your section heading</h2>
-  <p>Body HTML. Use headings, lists, <code>code</code>, and…</p>
-  <blockquote>…blockquotes become copyable pull quotes automatically.</blockquote>
-</section>
-
-<section data-title="Pattern">
-  <h2>Next section</h2>
-  <p>The <code>sections</code> frontmatter array should match these blocks in order.</p>
-</section>
-```
-
-Notes:
-- The reader is **progressive enhancement** — with JS it paginates by section; without JS the full article reads top-to-bottom. All sections are always in the HTML (good for SEO).
-- Fenced code blocks (` ```js `) get syntax highlighting.
-- Keep HTML flush-left (Markdown treats 4-space indents as code).
-
----
+> On Windows, if `node` isn't found after a fresh install, open a **new** terminal so the PATH
+> picks it up. See [docs/operations/local-development.md](docs/operations/local-development.md).
 
 ## Project structure
 
 ```text
 src/
-  components/   Header, SearchCommand, ArticleCard, PillarCard,
-                SectionReader, QuoteCard, CopyQuoteButton, ShareBar, Icon, …
-  content/posts/  the essays (HTML-sectioned)
-  layouts/      BaseLayout, ArticleLayout
-  pages/        index, about, [pillar]/index, [pillar]/[slug], rss.xml, 404
-  styles/       tokens.css (design tokens), global.css (base + prose)
-docs/guidelines/  the FarseerTech brand & implementation packet
+  components/   TopBar (logo · breadcrumbs · search), Sidebar (left nav),
+                Footer, BaseHead (SEO/icons)
+  layouts/      BaseLayout — the top-bar + left-sidebar app shell
+  pages/        index · about · 404 · rss.xml · field-notes/<the one note>.astro
+  styles/       tokens.css (design tokens) · global.css (base + shell)
+  consts.ts     SITE, NAV, FEATURED / FIELD_NOTES — the single source of truth
+public/         icons/ (favicon + PWA + OG), images/, robots.txt, site.webmanifest
+docs/           ← you are encouraged to start here
+.github/workflows/deploy.yml   CI build + Cloudflare Pages deploy
 ```
 
-Customize: site text in `src/consts.ts`, colors/fonts/scale in
-`src/styles/tokens.css`, icons in `src/components/Icon.astro`.
+## Content
+
+Today the site features a single, bespoke field note. Site text and the note's metadata live
+in [`src/consts.ts`](src/consts.ts); the note itself is a self-contained page under
+`src/pages/field-notes/`. Full guide: **[docs/content-authoring.md](docs/content-authoring.md)**.
+
+## Deploying
+
+Pushes are deployed automatically:
+
+- **`main`** → production at **farseertech.com**
+- **`staging`** → a preview at **staging.farseertech.pages.dev** (review before promoting)
+
+Promote staging to production with a `staging → main` merge. Full pipeline, infrastructure, DNS,
+and runbook: **[docs/operations/](docs/operations/)**.
+
+## Documentation
+
+| Doc | What's in it |
+| --- | --- |
+| [docs/architecture.md](docs/architecture.md) | How the site is built and why |
+| [docs/design-system.md](docs/design-system.md) | Tokens, type, color, layout |
+| [docs/content-authoring.md](docs/content-authoring.md) | Writing & editing field notes |
+| [docs/operations/](docs/operations/) | Local dev, deployment, infra, DNS/email, runbook |
+| [docs/guidelines/](docs/guidelines/) | The original brand & design brief |
 
 ---
 
-## Continuous integration & deployment
-
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on every push and PR:
-
-- **CI (always):** installs deps and runs `npm run build` — catches breakage on every change.
-- **CD (push to `main`):** deploys `dist/` to **Cloudflare Pages**, but only once the
-  repo is configured, so CI stays green until then.
-
-### Enable deploys (one-time)
-
-1. Create a Cloudflare **API token** with the *Edit Cloudflare Pages* permission
-   (Cloudflare dashboard → My Profile → API Tokens), and copy your **Account ID**.
-2. In the repo → **Settings → Secrets and variables → Actions**:
-   - Secret **`CLOUDFLARE_API_TOKEN`** = the token
-   - Variable **`CLOUDFLARE_ACCOUNT_ID`** = your account ID
-3. Push to `main`. The pipeline creates/updates the `farseertech` Pages project and deploys.
-4. Add `farseertech.com` to the project under **Custom domains**.
-
-> Prefer no Actions? Use Cloudflare's native **Connect to Git** instead (build
-> `npm run build`, output `dist`) and leave `CLOUDFLARE_ACCOUNT_ID` unset so the
-> Actions deploy job stays dormant — avoiding double deploys.
+<div align="center"><sub>© Yusuf Tinwala · FarseerTech</sub></div>
