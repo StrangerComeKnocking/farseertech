@@ -2,32 +2,48 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../consts';
 ---
-<BaseLayout title="About" description={`About FarseerTech — a personal technical publication by ${SITE.owner}.`} crumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}>
+<BaseLayout title="About" description={SITE.description} crumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}>
   <section class="about">
     <p class="eyebrow mono-label">About</p>
-    <h1 class="about-title">A publication about what production teaches you.</h1>
+    <h1 class="about-title">Most hard problems don't need a bigger team.</h1>
 
     <div class="prose">
       <p>
-        <strong>FarseerTech</strong> is where I write about the parts of engineering
-        that only become obvious after systems reach production scale: ownership,
-        reliability, product judgment, agentic architecture, and the organizational
-        machinery required to make software survive contact with reality.
+        Walk into most engineering orgs with a genuinely hard problem and watch what
+        happens: the headcount goes up, the architecture diagram sprouts another dozen
+        boxes, the cloud bill quietly doubles, and a year later nobody can fully explain
+        how any of it works. That's the default. <strong>FarseerTech</strong> is the bet
+        against it.
       </p>
       <p>
-        I'm <strong>{SITE.owner}</strong> — the owner and the voice behind it. I write
-        about building hyperscale AI products, AIOps systems, agentic architecture,
-        production engineering, and engineering leadership. The writing is grounded in
-        real experience building and operating large-scale systems, not in slideware.
+        FarseerTech is an engineering practice with one obsession: <strong>solving
+        complicated problems frugally</strong>. The simplest system that actually works.
+        The fewest moving parts someone has to own. The smallest bill at the end of the
+        quarter — in compute, in COGS, and in the number of engineers it takes to keep
+        the lights on.
       </p>
       <p>
-        It's a personal publication, not a pitch. The goal is simple: calm, senior
-        engineering judgment for people building agentic products at the scale where
-        mistakes get expensive — <em>seeing the production bill before it arrives</em>.
+        Complexity and headcount <em>feel</em> like progress. Usually they're just
+        deferred liability with a nicer name — there's a
+        <a href="/field-notes/ai-velocity-manufacturing-liabilities">whole field note</a>
+        about that. The frugal solution is harder to find; it takes more judgment, not
+        less. But it's the one you can still run, still afford, and still reason about
+        when it matters most.
+      </p>
+      <p class="about-list-intro">In practice that looks like:</p>
+      <ul class="about-list">
+        <li><strong>Fewer services</strong> — systems a handful of people can hold in their heads.</li>
+        <li><strong>Lower COGS</strong> — every box on the diagram has to earn its bill.</li>
+        <li><strong>Leaner teams</strong> — the goal is more leverage per engineer, not more engineers.</li>
+      </ul>
+      <p>
+        Behind it is <strong>{SITE.owner}</strong> — founder, and (only half-joking) Chief
+        Frugal Officer. The writing here is the practice out loud: field notes on the
+        messy, expensive, eventually-obvious parts of building software at scale.
       </p>
       <p>
-        New writing lands as <a href="/field-notes/ai-velocity-manufacturing-liabilities">field notes</a>.
-        Follow along via <a href="/rss.xml">RSS</a>.
+        New notes land here as they're written. If that's your kind of engineering,
+        follow along via <a href="/rss.xml">RSS</a>.
       </p>
     </div>
   </section>
@@ -39,8 +55,12 @@ import { SITE } from '../consts';
   .about-title {
     margin: 0.5rem 0 1.6rem;
     font-size: var(--t-2xl);
-    line-height: 1.08;
+    line-height: 1.1;
     letter-spacing: -0.02em;
-    max-width: 18ch;
+    max-width: 20ch;
   }
+  .about-list-intro { margin-bottom: 0.3rem !important; }
+  .about-list { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 0.4rem; }
+  .about-list li { line-height: 1.5; }
+  .about-list li::marker { color: var(--coral); }
 </style>

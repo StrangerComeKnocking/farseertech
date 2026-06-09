@@ -2,7 +2,7 @@ name: CI · Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -60,4 +60,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=farseertech --branch=main
+          # main -> production (farseertech.com); staging -> preview (staging.farseertech.pages.dev)
+          command: pages deploy dist --project-name=farseertech --branch=${{ github.ref_name }}

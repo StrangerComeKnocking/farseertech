@@ -6,11 +6,25 @@ const isActive = (href: string) =>
 ---
 <aside class="sidebar">
   <nav class="sb-nav" aria-label="Primary">
-    {NAV.map((item) => (
-      <a href={item.href} class={isActive(item.href) ? 'active' : ''}>
-        <span class="sb-dot" aria-hidden="true"></span>{item.label}
-      </a>
-    ))}
+    {NAV.map((item) => {
+      const itemActive = item.section ? path.startsWith(item.section) : isActive(item.href);
+      return (
+        <div class="sb-item">
+          <a href={item.href} class={itemActive ? 'active' : ''}>
+            <span class="sb-dot" aria-hidden="true"></span>{item.label}
+          </a>
+          {item.children && itemActive && (
+            <ul class="sb-sub">
+              {item.children.map((c) => (
+                <li>
+                  <a href={c.href} class={path === c.href ? 'active' : ''}>{c.label}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    })}
   </nav>
 
   <div class="sb-foot">
@@ -33,7 +47,8 @@ const isActive = (href: string) =>
     border-right: 1px solid var(--line);
   }
   .sb-nav { display: flex; flex-direction: column; gap: 0.15rem; }
-  .sb-nav a {
+  .sb-item { display: flex; flex-direction: column; }
+  .sb-item > a {
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -48,10 +63,46 @@ const isActive = (href: string) =>
     width: 0.4rem; height: 0.4rem; border-radius: 50%;
     background: var(--line-strong);
     transition: background 0.15s ease, transform 0.15s ease;
+    flex: none;
   }
-  .sb-nav a:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); }
-  .sb-nav a.active { color: var(--ink); font-weight: 500; background: color-mix(in srgb, var(--coral) 9%, transparent); }
-  .sb-nav a.active .sb-dot { background: var(--coral); transform: scale(1.2); }
+  .sb-item > a:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); }
+  .sb-item > a.active { color: var(--ink); font-weight: 500; background: color-mix(in srgb, var(--coral) 9%, transparent); }
+  .sb-item > a.active .sb-dot { background: var(--coral); transform: scale(1.2); }
+
+  /* Nested notes, revealed when the section is active */
+  .sb-sub {
+    list-style: none;
+    margin: 0.1rem 0 0.35rem;
+    padding: 0.1rem 0 0.1rem 1.55rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    position: relative;
+  }
+  .sb-sub::before {
+    content: '';
+    position: absolute;
+    left: 0.95rem;
+    top: 0.2rem;
+    bottom: 0.3rem;
+    width: 1px;
+    background: var(--line);
+  }
+  .sb-sub a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.8rem;
+    line-height: 1.32;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.35rem 0.5rem;
+    border-radius: 7px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .sb-sub a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .sb-sub a.active { color: var(--ink); font-weight: 500; background: color-mix(in srgb, var(--coral) 8%, transparent); }
 
   .sb-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.1rem; }
   .sb-owner { font-weight: 600; font-size: 0.96rem; }
@@ -63,7 +114,6 @@ const isActive = (href: string) =>
   }
   .sb-rss:hover { text-decoration: underline; }
 
-  /* Mobile: a horizontal nav strip under the top bar */
   @media (max-width: 60rem) {
     .sidebar {
       position: sticky;
@@ -84,7 +134,9 @@ const isActive = (href: string) =>
     .sidebar::-webkit-scrollbar { display: none; }
     .sb-foot { display: none; }
     .sb-nav { flex-direction: row; gap: 0.2rem; }
-    .sb-nav a { padding: 0.4rem 0.65rem; white-space: nowrap; }
+    .sb-item { flex-direction: row; }
+    .sb-item > a { padding: 0.4rem 0.65rem; white-space: nowrap; }
     .sb-dot { display: none; }
+    .sb-sub { display: none; } /* keep the mobile strip flat */
   }
 </style>
