@@ -1,0 +1,60 @@
+---
+import { SITE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
+}
+const {
+  title,
+  description = SITE.description,
+  image,
+  type = 'website',
+  jsonLd,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} — ${SITE.positioning}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const ogImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<meta name="author" content={SITE.owner} />
+<link rel="canonical" href={canonical.href} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="theme-color" content="#fcfaf4" />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.title} />
+<meta property="og:title" content={title ?? SITE.title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical.href} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+<!-- Twitter / LinkedIn-friendly -->
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title ?? SITE.title} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+<link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Fonts: Newsreader (editorial serif) + IBM Plex Mono (technical chrome) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,320..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

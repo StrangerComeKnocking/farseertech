@@ -1,0 +1,58 @@
+/* ============================================================
+   FarseerTech — design tokens
+   Warm paper, editorial + technical, restrained accents.
+   ============================================================ */
+:root {
+  /* Surfaces & ink */
+  --paper: #fcfaf4;
+  --card: #fffdf8;
+  --ink: #26252d;
+  --ink-soft: #5f5d6b;
+  --faint: #9b98a6;
+  --line: #e8e1d4;
+  --line-strong: #ddd4c2;
+
+  /* Premium accents — one dominant per page */
+  --coral: #f5634f;   /* production bill, risk, liability */
+  --indigo: #5f6ff0;  /* systems, architecture, AI */
+  --teal: #15a99b;    /* health, renewal, living systems */
+  --gold: #e9a423;    /* warning, lessons */
+  --violet: #9e68df;  /* future, agentic systems */
+
+  /* Type */
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Fluid, compact editorial scale */
+  --t-2xs: 0.68rem;
+  --t-xs: 0.74rem;
+  --t-sm: 0.84rem;
+  --t-base: 1rem;
+  --t-md: 1.08rem;
+  --t-lg: clamp(1.15rem, 1.06rem + 0.4vw, 1.38rem);
+  --t-xl: clamp(1.4rem, 1.22rem + 0.8vw, 1.95rem);
+  --t-2xl: clamp(1.75rem, 1.42rem + 1.5vw, 2.6rem);
+  --t-3xl: clamp(2.1rem, 1.66rem + 2vw, 3.2rem);
+
+  /* Spacing */
+  --sp-1: 0.4rem;
+  --sp-2: 0.7rem;
+  --sp-3: 1rem;
+  --sp-4: 1.4rem;
+  --sp-5: 2rem;
+  --sp-6: 2.8rem;
+
+  /* Radius & elevation (soft, premium) */
+  --r-sm: 8px;
+  --r: 13px;
+  --r-lg: 18px;
+  --shadow-sm: 0 1px 2px rgba(38, 37, 45, 0.05), 0 2px 8px rgba(38, 37, 45, 0.04);
+  --shadow: 0 8px 26px -12px rgba(38, 37, 45, 0.18);
+  --shadow-lg: 0 26px 64px -24px rgba(38, 37, 45, 0.3);
+
+  --container: 74rem;
+  --measure: 40rem;
+  --ring: 0 0 0 3px rgba(95, 111, 240, 0.32);
+
+  color-scheme: light;
+}

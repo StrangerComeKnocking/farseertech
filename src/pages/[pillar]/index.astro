@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Icon from '../../components/Icon.astro';
+import { PILLARS, PILLAR_ORDER, type PillarId } from '../../consts';
+import { getPostsByPillar } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  return PILLAR_ORDER.map((id) => ({ params: { pillar: id }, props: { pillar: id } }));
+}
+const { pillar } = Astro.props as { pillar: PillarId };
+const p = PILLARS[pillar];
+const posts = await getPostsByPillar(pillar);
+---
+<BaseLayout title={p.name} description={p.blurb}>
+  <section class="pp container" style={`--accent:${p.accent}`}>
+    <header class="pp-head">
+      <span class="pp-icon"><Icon name={p.icon} size={26} /></span>
+      <div>
+        <p class="kicker mono-label">Pillar</p>
+        <h1 class="pp-title">{p.name}</h1>
+        <p class="pp-blurb">{p.blurb}</p>
+      </div>
+    </header>
+
+    <nav class="pp-switch" aria-label="All pillars">
+      {PILLAR_ORDER.map((id) => (
+        <a class={id === pillar ? 'active' : ''} href={`/${id}`} style={`--a:${PILLARS[id].accent}`}>
+          {PILLARS[id].short}
+        </a>
+      ))}
+    </nav>
+
+    {posts.length > 0 ? (
+      <div class="pp-list">{posts.map((post) => <ArticleCard post={post} />)}</div>
+    ) : (
+      <p class="pp-empty">The first piece in this pillar is on its way. <a href="/rss.xml">Subscribe</a> so you don't miss it.</p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .pp { padding-top: clamp(2rem, 5vw, 3.2rem); }
+  .pp-head { display: flex; align-items: flex-start; gap: 1rem; max-width: 52rem; }
+  .pp-icon {
+    display: grid; place-items: center; flex: none;
+    width: 3rem; height: 3rem; border-radius: 12px;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .kicker { color: color-mix(in srgb, var(--accent) 70%, var(--ink-soft)); }
+  .pp-title { margin: 0.3rem 0 0; font-size: var(--t-2xl); letter-spacing: -0.02em; line-height: 1.05; }
+  .pp-blurb { margin-top: 0.5rem; color: var(--ink-soft); font-size: var(--t-md); max-width: 46ch; line-height: 1.45; }
+
+  .pp-switch { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.6rem 0 1.4rem; }
+  .pp-switch a {
+    font-family: var(--mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--ink-soft); text-decoration: none;
+    border: 1px solid var(--line); background: var(--card);
+    border-radius: 999px; padding: 0.4rem 0.8rem;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .pp-switch a:hover { color: var(--ink); border-color: var(--a, var(--ink-soft)); }
+  .pp-switch a.active { color: var(--ink); border-color: var(--a); background: color-mix(in srgb, var(--a) 12%, var(--card)); }
+
+  .pp-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 0.85rem;
+  }
+  .pp-empty { font-family: var(--serif); font-size: var(--t-lg); color: var(--ink-soft); max-width: 40ch; }
+</style>

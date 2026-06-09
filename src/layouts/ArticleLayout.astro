@@ -1,0 +1,96 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SectionReader from '../components/SectionReader.astro';
+import ShareBar from '../components/ShareBar.astro';
+import QuoteCard from '../components/QuoteCard.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Icon from '../components/Icon.astro';
+import { PILLARS, SITE } from '../consts';
+import { postUrl, postReadingTime, postAccent, type Post } from '../utils/posts';
+
+interface Props { post: Post }
+const { post } = Astro.props;
+const d = post.data;
+const pillar = PILLARS[d.pillar];
+const accent = postAccent(post);
+const rt = postReadingTime(post);
+const url = new URL(postUrl(post), Astro.site ?? Astro.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.date.toISOString(),
+  dateModified: (d.updated ?? d.date).toISOString(),
+  author: { '@type': 'Person', name: SITE.owner },
+  publisher: { '@type': 'Organization', name: SITE.title },
+  mainEntityOfPage: url,
+  articleSection: pillar.name,
+  ...(d.ogImage ? { image: new URL(d.ogImage, Astro.site ?? Astro.url).href } : {}),
+};
+---
+<BaseLayout title={d.title} description={d.description} type="article" image={d.ogImage} jsonLd={jsonLd}>
+  <article class="article container" style={`--accent:${accent}`}>
+    <header class="art-head">
+      <a class="art-pillar" href={`/${pillar.id}`}>
+        <Icon name={pillar.icon} size={16} />
+        <span>{pillar.name}</span>
+      </a>
+      <h1 class="art-title">{d.title}</h1>
+      <p class="art-intro">{d.description}</p>
+      <div class="art-meta mono-label">
+        <FormattedDate date={d.date} />
+        <span class="sep">·</span>
+        <span>{rt}</span>
+        {d.updated ? (
+          <span class="sep-block">· Updated <FormattedDate date={d.updated} /></span>
+        ) : null}
+      </div>
+    </header>
+
+    <SectionReader sections={d.sections}>
+      <slot />
+      <Fragment slot="meta">
+        <div class="meta-block">
+          <p class="mono-label">Reading time</p>
+          <p class="meta-rt">{rt}</p>
+        </div>
+        {d.quote ? <QuoteCard quote={d.quote} accent={accent} /> : null}
+        <ShareBar url={url} title={d.title} />
+        <a class="meta-pillar-link" href={`/${pillar.id}`}>
+          More in {pillar.name}<Icon name="arrow-right" size={15} />
+        </a>
+      </Fragment>
+    </SectionReader>
+  </article>
+</BaseLayout>
+
+<style>
+  .article { padding-top: clamp(1.8rem, 4.5vw, 3.2rem); }
+  .art-head { max-width: 52rem; margin-bottom: clamp(1.6rem, 4vw, 2.6rem); }
+  .art-pillar {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.1em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--accent) 72%, var(--ink)); text-decoration: none;
+  }
+  .art-pillar:hover { color: var(--accent); }
+  .art-title {
+    font-size: var(--t-3xl); line-height: 1.05; letter-spacing: -0.022em;
+    margin: 0.7rem 0 0; max-width: 18ch;
+  }
+  .art-intro {
+    margin-top: 0.95rem; font-size: var(--t-lg); line-height: 1.45;
+    color: var(--ink-soft); max-width: 46ch;
+  }
+  .art-meta { margin-top: 1.15rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .art-meta .sep { color: var(--line-strong); }
+
+  .meta-block { border-left: 2px solid var(--accent); padding-left: 0.7rem; }
+  .meta-rt { font-family: var(--serif); font-size: 1.35rem; line-height: 1.1; }
+  .meta-pillar-link {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-soft); text-decoration: none;
+  }
+  .meta-pillar-link:hover { color: var(--ink); }
+</style>
