@@ -17,9 +17,11 @@ Edit here; the sidebar, top bar, home, About, `<head>`, and RSS all read from it
 
 Today there is **one** bespoke field note. It has two halves:
 
-1. **Metadata** in `consts.ts` → `FEATURED` (and `FIELD_NOTES = [FEATURED]`):
-   `title`, `highlight` (the coral-emphasized phrase), `dek`, `description`, `date`, `href`, `comic`.
-   This drives the **home feature card**, **RSS**, **`<head>`/JSON-LD**, and the **nav**.
+1. **Metadata** in `consts.ts` → `FEATURED` (and `FIELD_NOTES`), typed as `FieldNote`:
+   `series`, `number`, `kicker`, `title`, `highlight` (the coral phrase **inside** the title),
+   `description`, `date`, `href`, `comic`. This drives the **home feature card**, **search**,
+   **RSS**, **`<head>`/JSON-LD**, and the **nav**. (Every field is required — the `FieldNote`
+   type means a missing one fails `npm run check`.)
 2. **The page itself** at `src/pages/field-notes/<slug>.astro` — a self-contained Astro page with its
    own scoped `<style>` and a small lightbox script.
 
@@ -38,19 +40,23 @@ Until there are enough notes to justify a content collection, follow the same pa
 1. **Create the page** `src/pages/field-notes/<your-slug>.astro`. Start from the existing note as a
    template, or use a simpler layout — it just needs `<BaseLayout>` with a `title`, `description`,
    `type="article"`, a JSON-LD object, and a `crumbs` array.
-2. **Add its metadata** to `consts.ts`. Promote it to a small list:
+2. **Add its metadata** to `consts.ts` using the **`FieldNote`** type — so a missing field fails
+   `npm run check` (and CI) instead of silently rendering `undefined`. Rename the existing `FEATURED`
+   object to `NOTE_01`, then:
    ```ts
-   export const NOTE_01 = { /* the existing FEATURED */ };
-   export const NOTE_02 = { title: '…', dek: '…', date: new Date('YYYY-MM-DD'),
-                            href: '/field-notes/your-slug', comic: '/images/…' };
-   export const FIELD_NOTES = [NOTE_02, NOTE_01];   // newest first
-   export const FEATURED = FIELD_NOTES[0];          // home features the newest
+   const NOTE_02: FieldNote = {
+     series: 'Paid in Production', number: '№ 02', kicker: 'Field Note',
+     title: 'Your headline', highlight: 'the coral phrase inside the title',
+     description: 'One or two sentences — powers the home card, search, RSS, and SEO.',
+     date: new Date('YYYY-MM-DD'),
+     href: '/field-notes/your-slug', comic: '/images/your-image.png',
+   };
+   export const FIELD_NOTES: FieldNote[] = [NOTE_02, NOTE_01]; // newest first
+   export const FEATURED: FieldNote = FIELD_NOTES[0];          // home features the newest
    ```
-3. **Nav and search update automatically** — the sidebar's Field Notes children **and** the top-bar
-   search index are both derived from `FIELD_NOTES`. No manual edits there.
-4. **RSS** ([`src/pages/rss.xml.js`](../src/pages/rss.xml.js)) currently emits one item from `FEATURED`;
-   map over `FIELD_NOTES` instead when you have more than one.
-5. **SEO** is per-page — each note's page carries its own `<head>` tags and JSON-LD, so there's
+3. **Nav, search, and RSS update automatically** — all three are derived from `FIELD_NOTES`
+   (the sidebar's Field Notes children, the top-bar search index, and `rss.xml.js`). Nothing to hand-edit.
+4. **SEO** is per-page — each note's page carries its own `<head>` tags and JSON-LD, so there's
    nothing central to update.
 
 > **When to switch to a content collection:** once notes share a layout and you're adding them often,

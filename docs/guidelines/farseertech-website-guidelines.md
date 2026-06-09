@@ -1,5 +1,10 @@
 # FarseerTech Website Guidelines
 
+> ⚠️ **Historical brief — superseded.** This is the *original* spec, kept for reference. The site as
+> built has since diverged from it (Inter not Newsreader, a single field note not four pillars, no
+> content collection, a frugal-consultancy positioning). For the as-built system see
+> [../architecture.md](../architecture.md) and [../design-system.md](../design-system.md).
+
 ## 1. Brand Definition
 
 **FarseerTech** is a personal technical publication with the polish and credibility of a premium consulting firm.

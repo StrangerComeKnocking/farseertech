@@ -2,7 +2,8 @@
 
 ## Prerequisites
 
-- **Node.js 18.17+** (or 20+) and npm. Check with `node --version`.
+- **Node.js 20** and npm — pinned in [`.nvmrc`](../../.nvmrc) and used by CI (`nvm use` picks it up).
+  18.17+ should also work, but 20 is the tested version. Check with `node --version`.
 - Git.
 
 > **Windows note:** Node here was installed via `winget install OpenJS.NodeJS.LTS`. After a fresh

@@ -28,7 +28,7 @@ note today and room to grow. Output is plain static files served from Cloudflare
 
 ## Quickstart
 
-Requires **Node.js 18.17+** (or 20+).
+Requires **Node.js 20** (pinned in [`.nvmrc`](.nvmrc) and used by CI; 18.17+ should also work, but 20 is what's tested).
 
 ```bash
 git clone https://github.com/StrangerComeKnocking/farseertech.git

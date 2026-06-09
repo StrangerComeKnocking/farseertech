@@ -1,5 +1,9 @@
 # FarseerTech Icon Set
 
+> ⚠️ **Historical brief — superseded.** The original monoline icon set below is *not* what ships. The
+> site uses the circular "Trajectory F" logo + favicon/PWA set in `public/icons/`. See
+> [../design-system.md](../design-system.md#icons).
+
 ## Icon Style Rules
 
 - SVG only.
