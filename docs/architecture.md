@@ -61,8 +61,9 @@ Astro file-based routing under `src/pages/`:
 The note is a bespoke visual essay (custom masthead, an inline SVG, an image with a zoom lightbox,
 scroll-reveal animation). Forcing that through a Markdown content collection + a generic article
 layout fought the design and risked Markdown-in-HTML quirks. So the note is its own `.astro` page
-with **scoped** styles and its own small script. Its *metadata* (title, dek, date, image) lives in
-`consts.ts` as `FEATURED` so the home feature, `<head>`/SEO, and RSS can all reference one source.
+with **scoped** styles and its own small script. Its *metadata* lives in `consts.ts` as a typed
+`FieldNote` (`title`, `highlight`, `description`, `date`, `href`, `comic`, …) — `FEATURED` — so the
+home feature, search, `<head>`/SEO, and RSS can all reference one source.
 
 > When there are several notes, revisit this: a content collection becomes worth it once the
 > per-note design converges. For one bespoke piece, a page is simpler and safer.

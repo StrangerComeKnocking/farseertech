@@ -8,7 +8,9 @@
 - **Registrar:** Squarespace (where the domain is registered/renewed).
 - **DNS:** **Cloudflare** — the domain's nameservers were changed at Squarespace to Cloudflare's
   (`*.ns.cloudflare.com`), so the **Cloudflare zone is authoritative** for all records.
-- **Email:** Mailgun, via MX/SPF/DKIM records that live **in the Cloudflare zone**.
+- **Email:** **Squarespace Email Forwarding**, which runs on **Mailgun's** infrastructure — that's
+  why the MX/SPF/DKIM records all point at `mailgun.org`. The records themselves live **in the
+  Cloudflare zone** (Cloudflare is authoritative for DNS; Squarespace/Mailgun handle the mail).
 
 To change DNS, edit the **Cloudflare zone** (dashboard or API). Changing records at Squarespace does
 nothing now — Cloudflare is authoritative.
