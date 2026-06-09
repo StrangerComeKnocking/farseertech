@@ -1,5 +1,7 @@
 # FarseerTech
 
+[![CI · Deploy](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml/badge.svg)](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml)
+
 Source for **[farseertech.com](https://farseertech.com)** — a personal technical
 publication by **Yusuf Tinwala** on building hyperscale, agentic, production-grade
 systems: AIOps, agentic architecture, reliability, product judgment, and
@@ -94,15 +96,24 @@ Customize: site text in `src/consts.ts`, colors/fonts/scale in
 
 ---
 
-## Deploy to Cloudflare Pages
+## Continuous integration & deployment
 
-Static Astro build — no adapter needed.
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on every push and PR:
 
-1. Push to GitHub.
-2. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git**.
-3. Build command `npm run build`, output directory `dist`, framework preset **Astro**.
-4. Add `farseertech.com` under **Custom domains**.
+- **CI (always):** installs deps and runs `npm run build` — catches breakage on every change.
+- **CD (push to `main`):** deploys `dist/` to **Cloudflare Pages**, but only once the
+  repo is configured, so CI stays green until then.
 
-Every push to the main branch redeploys, with preview deploys for pull requests.
+### Enable deploys (one-time)
 
-> CLI alternative: `npm run build && npx wrangler pages deploy dist`.
+1. Create a Cloudflare **API token** with the *Edit Cloudflare Pages* permission
+   (Cloudflare dashboard → My Profile → API Tokens), and copy your **Account ID**.
+2. In the repo → **Settings → Secrets and variables → Actions**:
+   - Secret **`CLOUDFLARE_API_TOKEN`** = the token
+   - Variable **`CLOUDFLARE_ACCOUNT_ID`** = your account ID
+3. Push to `main`. The pipeline creates/updates the `farseertech` Pages project and deploys.
+4. Add `farseertech.com` to the project under **Custom domains**.
+
+> Prefer no Actions? Use Cloudflare's native **Connect to Git** instead (build
+> `npm run build`, output `dist`) and leave `CLOUDFLARE_ACCOUNT_ID` unset so the
+> Actions deploy job stays dormant — avoiding double deploys.
