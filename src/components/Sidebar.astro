@@ -30,7 +30,6 @@ const isActive = (href: string) =>
   <div class="sb-foot">
     <p class="sb-owner">{SITE.owner}</p>
     <p class="sb-role mono-label">{SITE.role}</p>
-    <a class="sb-rss" href="/rss.xml">RSS</a>
   </div>
 </aside>
 
@@ -107,12 +106,6 @@ const isActive = (href: string) =>
   .sb-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.1rem; }
   .sb-owner { font-weight: 600; font-size: 0.96rem; }
   .sb-role { margin-top: 0.05rem; }
-  .sb-rss {
-    margin-top: 0.7rem; align-self: start;
-    font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--coral); text-decoration: none;
-  }
-  .sb-rss:hover { text-decoration: underline; }
 
   @media (max-width: 60rem) {
     .sidebar {
