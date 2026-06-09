@@ -7,7 +7,7 @@ const { crumbs = [] } = Astro.props;
 
 const index = [
   { title: FEATURED.title, type: 'Field Note · № 01', url: FEATURED.href, kw: 'paid in production agents ownership ttl usage liabilities velocity durable artifact obligation' },
-  { title: 'About', type: 'Page', url: '/about', kw: 'about yusuf tinwala farseertech career credibility' },
+  { title: 'About', type: 'Page', url: '/about', kw: 'about yusuf tinwala farseertech career credibility consultants strategy' },
   { title: 'Home', type: 'Page', url: '/', kw: 'home start latest' },
 ];
 ---
@@ -83,6 +83,7 @@ const index = [
   input?.addEventListener('blur', () => setTimeout(() => { res.hidden = true; input.setAttribute('aria-expanded', 'false'); }, 160));
 </script>
 
+<!-- Static chrome: scoped styles are fine -->
 <style>
   .topbar {
     position: sticky; top: 0; z-index: 100;
@@ -125,7 +126,7 @@ const index = [
     position: absolute;
     top: calc(100% + 0.55rem);
     right: 0;
-    width: min(20rem, 80vw);
+    width: min(21rem, 82vw);
     list-style: none; margin: 0; padding: 0.35rem;
     background: var(--card);
     border: 1px solid var(--line-strong);
@@ -136,23 +137,52 @@ const index = [
     animation: tb-pop 0.13s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
   @keyframes tb-pop { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
-  .tb-item a {
-    display: flex; flex-direction: column; gap: 0.12rem;
-    padding: 0.5rem 0.6rem; border-radius: 9px; text-decoration: none;
-  }
-  .tb-t { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.25; }
-  .tb-ty { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); }
-  .tb-item.active a, .tb-item a:hover { background: color-mix(in srgb, var(--coral) 8%, transparent); }
-  .tb-item.active .tb-ty { color: var(--coral); }
-  .tb-empty { padding: 0.7rem 0.7rem; font-size: 0.85rem; color: var(--faint); }
-  .tb-hint {
-    margin-top: 0.3rem; padding: 0.45rem 0.6rem 0.2rem;
-    border-top: 1px solid var(--line);
-    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--faint);
-  }
 
   @media (max-width: 60rem) {
     .tb-crumbs { display: none; }
     .tb-search { width: 9.5rem; margin-left: auto; }
+  }
+</style>
+
+<!-- Result rows are injected by JS, so they need global (un-scoped) styles -->
+<style is:global>
+  .tb-results .tb-item { list-style: none; }
+  .tb-results .tb-item a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 0.65rem;
+    border-radius: 9px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .tb-results .tb-t {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .tb-results .tb-ty {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .tb-results .tb-item.active a,
+  .tb-results .tb-item a:hover { background: color-mix(in srgb, var(--coral) 8%, transparent); }
+  .tb-results .tb-item.active .tb-ty { color: var(--coral); }
+  .tb-results .tb-empty { padding: 0.7rem 0.7rem; font-size: 0.85rem; color: var(--faint); font-family: var(--sans); }
+  .tb-results .tb-hint {
+    list-style: none;
+    margin-top: 0.3rem;
+    padding: 0.45rem 0.6rem 0.2rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: var(--faint);
   }
 </style>

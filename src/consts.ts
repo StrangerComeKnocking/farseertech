@@ -3,7 +3,7 @@
 export const SITE = {
   title: 'FarseerTech',
   owner: 'Yusuf Tinwala',
-  role: 'Founder · Chief Frugal Officer',
+  role: 'Founder',
   positioning: 'Solving complicated engineering problems, frugally.',
   tagline: 'Seeing the production bill before it arrives.',
   description:
