@@ -1,5 +1,10 @@
 # FarseerTech Guideline Packet
 
+> ⚠️ **Historical brief — superseded.** This is the *original* spec, kept for reference. The site as
+> built has since diverged from it (e.g. Inter not Newsreader, a single field note not four pillars,
+> no content collection). For the current, as-built system see
+> [../architecture.md](../architecture.md) and [../design-system.md](../design-system.md).
+
 This zip contains implementation-ready guidance for coding agents building the FarseerTech website.
 
 ## Files

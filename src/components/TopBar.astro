@@ -1,12 +1,18 @@
 ---
-import { FEATURED } from '../consts';
+import { FIELD_NOTES } from '../consts';
 
 interface Crumb { label: string; href?: string }
 interface Props { crumbs?: Crumb[] }
 const { crumbs = [] } = Astro.props;
 
+// Note results are derived from FIELD_NOTES, so adding a note updates search automatically.
 const index = [
-  { title: FEATURED.title, type: 'Field Note · № 01', url: FEATURED.href, kw: 'paid in production agents ownership ttl usage liabilities velocity durable artifact obligation' },
+  ...FIELD_NOTES.map((n) => ({
+    title: n.title,
+    type: `Field Note · ${n.number}`,
+    url: n.href,
+    kw: `${n.series} ${n.description} field note`.toLowerCase(),
+  })),
   { title: 'About', type: 'Page', url: '/about', kw: 'about yusuf tinwala farseertech career credibility consultants strategy' },
   { title: 'Home', type: 'Page', url: '/', kw: 'home start latest' },
 ];

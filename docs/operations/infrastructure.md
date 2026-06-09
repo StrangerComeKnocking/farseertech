@@ -38,6 +38,19 @@ The deploy token is intentionally minimal: it can publish Pages and nothing else
 > Zone/DNS changes were done with a **separate, broader, temporary** token that was used once and
 > revoked. CI never needs Zone or DNS permissions.
 
+## GitHub Environments
+
+The deploy job binds to a GitHub **Environment** — `production` for `main`, `staging` for the staging
+branch (the name is derived from `github.ref_name` in `deploy.yml`). This is what gives you the
+Deployments view and the live URL in the GitHub UI.
+
+- **No protection rules are configured** (no required reviewers, no wait timer), so deploys are **not**
+  held for approval. If a deploy is ever stuck *pending*, the first thing to check is whether someone
+  added reviewers under **Settings → Environments → production**.
+- The `CLOUDFLARE_API_TOKEN` secret and `CLOUDFLARE_ACCOUNT_ID` variable are **repo-scoped**, not
+  environment-scoped — they live under **Settings → Secrets and variables → Actions**, not under an
+  Environment. If CI can't see them, that's where to look.
+
 ## Creating the Pages project (one-time, for reference)
 
 Wrangler won't auto-create a project in non-interactive CI, so the Direct Upload project is created

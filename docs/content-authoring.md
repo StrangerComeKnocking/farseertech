@@ -46,9 +46,12 @@ Until there are enough notes to justify a content collection, follow the same pa
    export const FIELD_NOTES = [NOTE_02, NOTE_01];   // newest first
    export const FEATURED = FIELD_NOTES[0];          // home features the newest
    ```
-3. **Nav** picks it up automatically — `NAV`'s Field Notes `children` is built from `FIELD_NOTES`.
+3. **Nav and search update automatically** — the sidebar's Field Notes children **and** the top-bar
+   search index are both derived from `FIELD_NOTES`. No manual edits there.
 4. **RSS** ([`src/pages/rss.xml.js`](../src/pages/rss.xml.js)) currently emits one item from `FEATURED`;
    map over `FIELD_NOTES` instead when you have more than one.
+5. **SEO** is per-page — each note's page carries its own `<head>` tags and JSON-LD, so there's
+   nothing central to update.
 
 > **When to switch to a content collection:** once notes share a layout and you're adding them often,
 > move bodies to `src/content/` Markdown/MDX and render via a single dynamic route. See

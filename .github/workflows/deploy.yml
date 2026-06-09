@@ -28,6 +28,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Type-check
+        run: npm run check
       - name: Build site
         run: npm run build
       - name: Upload build artifact
@@ -41,12 +43,14 @@ jobs:
     name: Deploy to Cloudflare Pages
     needs: build
     runs-on: ubuntu-latest
-    # Deploys only on pushes to main, and only once Cloudflare is configured.
-    # Set the repo variable CLOUDFLARE_ACCOUNT_ID to switch this on; until then
-    # this job is skipped and CI stays green.
+    # Deploys on pushes to `main` OR `staging` (and manual dispatch). The branch name is
+    # passed to Wrangler, so main -> production and staging -> preview. Gated on the
+    # CLOUDFLARE_ACCOUNT_ID repo variable; until that's set the job is skipped and CI stays
+    # green. No required reviewers are configured on these GitHub Environments, so deploys
+    # are NOT held for manual approval.
     if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.CLOUDFLARE_ACCOUNT_ID != '' }}
     environment:
-      name: production
+      name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
       url: ${{ steps.deploy.outputs.deployment-url }}
     steps:
       - name: Download build artifact

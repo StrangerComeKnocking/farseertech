@@ -10,6 +10,7 @@ export const SITE = {
     'FarseerTech is an engineering practice that solves complicated problems frugally — simpler systems, leaner teams, lower cost. Field notes and senior engineering judgment from Yusuf Tinwala.',
   url: 'https://farseertech.com',
   ogImage: '/icons/social-card-1200x630.png',
+  // Only `rss` is wired up today; the rest are placeholders for future links.
   social: {
     rss: '/rss.xml',
     linkedin: '',

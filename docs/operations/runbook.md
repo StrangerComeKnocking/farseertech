@@ -23,6 +23,10 @@ git push                           # deploys to farseertech.com
 git checkout staging               # resume work
 ```
 
+> **If `--ff-only` fails** (`fatal: Not possible to fast-forward` — the branches diverged): use a
+> normal merge, then realign — `git checkout main && git merge staging && git push`, then
+> `git checkout staging && git merge main`.
+
 Watch it:
 
 ```bash
@@ -39,6 +43,9 @@ with a cache-buster:
 ```bash
 #  ?cb=… forces a cache miss; CF-Cache-Status DYNAMIC = served fresh from origin
 curl -s "https://farseertech.com/?cb=$RANDOM" | grep -o 'frugally'
+
+# PowerShell equivalent:
+#   (Invoke-WebRequest "https://farseertech.com/?cb=$(Get-Random)" -UseBasicParsing).Content -match 'frugally'
 ```
 
 If it still looks stale after a minute, purge the cache (below) or hard-refresh (Ctrl/Cmd-Shift-R).

@@ -51,6 +51,14 @@ The Pages project's **production branch is `main`**, so only `main` updates the 
 
 > Keep `staging` ahead of (or equal to) `main`. Promotions are simple fast-forwards as long as you
 > don't commit to `main` directly.
+>
+> **If `--ff-only` fails** with `fatal: Not possible to fast-forward`, the branches have diverged —
+> someone landed a commit on `main` (a hotfix, or a PR merge). Recover with a normal merge, then
+> re-sync staging:
+> ```bash
+> git checkout main && git merge staging && git push      # ships to production
+> git checkout staging && git merge main                  # realign so ff-only works again
+> ```
 
 ## Watching a deploy
 

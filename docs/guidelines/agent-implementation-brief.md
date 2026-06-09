@@ -1,5 +1,10 @@
 # FarseerTech Agent Implementation Brief
 
+> ⚠️ **Historical brief — SUPERSEDED. Do not follow as current instructions.** This was the original
+> spec. The site has since diverged substantially (single field note, left-sidebar + top-bar nav,
+> Inter typeface, frugal-consultancy positioning, no content collection). Build against the as-built
+> docs: [../architecture.md](../architecture.md) and [../design-system.md](../design-system.md).
+
 You are building the FarseerTech website, not a generic AI/SaaS landing page.
 
 Treat FarseerTech as a premium personal technical publication for engineering leaders and executives. The brand is FarseerTech; Yusuf Tinwala is the owner and voice behind it.
