@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 # One run per branch; cancel superseded runs.
 concurrency:
@@ -43,7 +44,7 @@ jobs:
     # Deploys only on pushes to main, and only once Cloudflare is configured.
     # Set the repo variable CLOUDFLARE_ACCOUNT_ID to switch this on; until then
     # this job is skipped and CI stays green.
-    if: ${{ github.event_name == 'push' && vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.CLOUDFLARE_ACCOUNT_ID != '' }}
     environment:
       name: production
       url: ${{ steps.deploy.outputs.deployment-url }}
