@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, FEATURED } from '../consts';
 const titleBefore = FEATURED.title.replace(FEATURED.highlight, '').trim();
 ---
-<BaseLayout>
+<BaseLayout crumbs={[{ label: 'Home' }]}>
   <section class="home">
     <header class="home-head">
       <p class="eyebrow mono-label">FarseerTech · Field Notes</p>

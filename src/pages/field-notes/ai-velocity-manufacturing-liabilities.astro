@@ -15,7 +15,7 @@ const jsonLd = {
   articleSection: 'Field Notes',
 };
 ---
-<BaseLayout title={FEATURED.title} description={FEATURED.description} type="article" jsonLd={jsonLd}>
+<BaseLayout title={FEATURED.title} description={FEATURED.description} type="article" jsonLd={jsonLd} crumbs={[{ label: 'Home', href: '/' }, { label: 'Field Notes' }, { label: FEATURED.title }]}>
   <article class="post">
     <div class="sheet">
       <header class="mast reveal d1">
@@ -100,7 +100,7 @@ const jsonLd = {
           </g>
           <text x="508" y="238" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#f5634f">EXPIRED</text>
           <line x1="22" y1="252" x2="618" y2="252" stroke="#ece6d8" stroke-width="1"/>
-          <text x="320" y="280" text-anchor="middle" font-family="Newsreader,serif" font-style="italic" font-size="16" fill="#5f5d6b">Usage is the TTL signal most teams forget to collect.</text>
+          <text x="320" y="280" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-style="italic" font-size="15" fill="#5f5d6b">Usage is the TTL signal most teams forget to collect.</text>
         </svg>
         <figcaption>three of four were <em>append-only</em>. nobody set the <em>TTL</em>.</figcaption>
       </figure>

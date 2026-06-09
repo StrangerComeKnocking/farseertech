@@ -30,7 +30,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.12;
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
-  min-height: 100vh;
+  min-height: calc(100vh - var(--topbar-h));
 }
 .shell-main {
   min-width: 0;

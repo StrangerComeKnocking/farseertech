@@ -1,0 +1,159 @@
+---
+import { FEATURED } from '../consts';
+
+interface Crumb { label: string; href?: string }
+interface Props { crumbs?: Crumb[] }
+const { crumbs = [] } = Astro.props;
+
+// Tiny client-side search index (the whole site is small).
+const index = [
+  { title: 'Home', url: '/', kw: 'home start' },
+  { title: FEATURED.title, url: FEATURED.href, kw: 'field note paid in production agents ownership ttl usage liabilities velocity durable artifact' },
+  { title: 'About', url: '/about', kw: 'about yusuf tinwala farseertech' },
+];
+---
+<header class="topbar">
+  <a class="tb-brand" href="/" aria-label="FarseerTech — home">
+    <img src="/icons/farseertech-circle-64.png" alt="" width="22" height="22" />
+    <span>FarseerTech</span>
+  </a>
+
+  <nav class="tb-crumbs" aria-label="Breadcrumb">
+    {crumbs.map((c, i) => (
+      <span class="tb-crumb">
+        {i > 0 && <span class="tb-sep" aria-hidden="true">/</span>}
+        {c.href ? <a href={c.href}>{c.label}</a> : <span class="tb-current">{c.label}</span>}
+      </span>
+    ))}
+  </nav>
+
+  <div class="tb-search">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" /><path d="M16.5 16.5L21 21" />
+    </svg>
+    <input id="tb-q" type="search" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search" />
+    <ul id="tb-res" class="tb-results" role="listbox" hidden></ul>
+  </div>
+</header>
+
+<script define:vars={{ index }}>
+  const input = document.getElementById('tb-q');
+  const res = document.getElementById('tb-res');
+  let current = [];
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function run() {
+    const q = input.value.trim().toLowerCase();
+    current = q ? index.filter((it) => (it.title + ' ' + it.kw).toLowerCase().includes(q)).slice(0, 6) : [];
+    if (!current.length) { res.hidden = true; res.innerHTML = ''; return; }
+    res.innerHTML = current.map((it) => `<li role="option"><a href="${it.url}">${esc(it.title)}</a></li>`).join('');
+    res.hidden = false;
+  }
+  input?.addEventListener('input', run);
+  input?.addEventListener('focus', run);
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); if (current[0]) window.location.href = current[0].url; }
+    else if (e.key === 'Escape') { input.value = ''; res.hidden = true; input.blur(); }
+  });
+  input?.addEventListener('blur', () => setTimeout(() => { res.hidden = true; }, 160));
+</script>
+
+<style>
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--topbar-h);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0.9rem 0 1.1rem;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: saturate(150%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .tb-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: none;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .tb-brand img { border-radius: 50%; }
+
+  .tb-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
+    font-size: 0.84rem;
+    color: var(--faint);
+  }
+  .tb-crumb { display: inline-flex; align-items: center; gap: 0.35rem; min-width: 0; }
+  .tb-crumb:first-child { padding-left: 0.3rem; }
+  .tb-sep { color: var(--line-strong); }
+  .tb-crumbs a { color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
+  .tb-crumbs a:hover { color: var(--coral); }
+  .tb-current { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .tb-search {
+    position: relative;
+    flex: none;
+    width: min(15rem, 34vw);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.32rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--faint);
+    transition: border-color 0.15s ease;
+  }
+  .tb-search:focus-within { border-color: var(--ink-soft); }
+  #tb-q {
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  #tb-q::placeholder { color: var(--faint); }
+  #tb-q::-webkit-search-cancel-button { display: none; }
+
+  .tb-results {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    left: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0.3rem;
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    z-index: 120;
+  }
+  .tb-results li a {
+    display: block;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.88rem;
+  }
+  .tb-results li a:hover { background: color-mix(in srgb, var(--indigo) 9%, transparent); }
+
+  @media (max-width: 60rem) {
+    .tb-crumbs { display: none; }
+    .tb-search { width: 9.5rem; margin-left: auto; }
+  }
+</style>

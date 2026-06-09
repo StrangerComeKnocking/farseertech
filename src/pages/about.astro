@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../consts';
 ---
-<BaseLayout title="About" description={`About FarseerTech — a personal technical publication by ${SITE.owner}.`}>
+<BaseLayout title="About" description={`About FarseerTech — a personal technical publication by ${SITE.owner}.`} crumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}>
   <section class="about">
     <p class="eyebrow mono-label">About</p>
     <h1 class="about-title">A publication about what production teaches you.</h1>
