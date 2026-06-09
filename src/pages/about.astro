@@ -46,6 +46,11 @@ const description =
       <article class="founder">
         <h3 class="founder-name">{SITE.owner}</h3>
         <p class="founder-role mono-label">Founder</p>
+        <p class="founder-contact">
+          <a href="mailto:yusuf@farseertech.com">yusuf@farseertech.com</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://www.linkedin.com/in/yusuf-tinwala-98166231/" target="_blank" rel="noopener">LinkedIn</a>
+        </p>
         <div class="prose">
           <p>
             I'm an engineering leader at <strong>Microsoft</strong>. For most of the last decade I've
@@ -77,16 +82,46 @@ const description =
           </p>
         </div>
       </article>
-      <!--
-        Co-founder bios go here. FarseerTech is a 2–3 person group; add each real
-        co-founder as another <article class="founder"> once Yusuf supplies their
-        actual name/role/background. Do NOT invent people or credentials.
-      -->
+      <article class="founder">
+        <h3 class="founder-name">Huzefa Tinwala</h3>
+        <p class="founder-role mono-label">Founder</p>
+        <p class="founder-contact">
+          <a href="mailto:huzefa@farseertech.com">huzefa@farseertech.com</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://www.linkedin.com/in/huzefatinwala/" target="_blank" rel="noopener">LinkedIn</a>
+        </p>
+        <div class="prose">
+          <p>
+            I'm a Senior Director of Global Technology at <strong>Slalom</strong>, the consulting
+            firm, where I help executives at large enterprises make the calls that decide whether
+            a transformation actually works: how to connect systems that were never meant to talk
+            to each other, move to the cloud without the bill spiraling, and put GenAI to work
+            somewhere it earns its keep.
+          </p>
+          <p>
+            I came to advising the way I'd recommend anyone does — by building first. Over
+            twenty-plus years I went from writing software to leading the teams behind it: a
+            collision-repair platform used by tens of thousands of shops, large-scale CRM and
+            commerce integrations, early cloud and data architectures. I've led delivery teams
+            across three continents, sat on both sides of the VC pitch and the Fortune&nbsp;500
+            boardroom, and helped a medical-device maker scale ventilator production when the
+            world suddenly needed every unit it could build.
+          </p>
+          <p>
+            What I've learned advising dozens of companies is the same thing Yusuf learned
+            building hyperscale systems: the expensive path and the right path are rarely the
+            same one, and most transformations stall for lack of someone willing to say so
+            early. That's the half of FarseerTech I bring — the strategy-and-architecture view
+            to pair with the deep engineering one. Between us, you get both before you commit.
+          </p>
+        </div>
+      </article>
     </div>
 
     <p class="about-cta">
       If you're staring down a big build, a bigger team, or an AI roadmap and want a frank
       second opinion first — that's exactly the conversation we like to have.
+      <a class="cta-mail" href={`mailto:${SITE.social.email}`}>Start the conversation&nbsp;→ {SITE.social.email}</a>
     </p>
   </section>
 </BaseLayout>
@@ -115,7 +150,20 @@ const description =
   }
   .founders { display: flex; flex-direction: column; gap: 2rem; margin-top: 1.2rem; }
   .founder-name { margin: 0; font-size: var(--t-lg); letter-spacing: -0.01em; }
-  .founder-role { margin: 0.15rem 0 0.6rem; color: var(--coral); }
+  .founder-role { margin: 0.15rem 0 0.25rem; color: var(--coral); }
+  .founder-contact {
+    margin: 0 0 0.85rem;
+    font-family: var(--mono);
+    font-size: var(--t-xs);
+    letter-spacing: 0.02em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.6rem;
+    color: var(--faint);
+  }
+  .founder-contact a { color: var(--ink-soft); text-decoration: none; }
+  .founder-contact a:hover { color: var(--coral); }
 
   .about-cta {
     margin-top: clamp(2.2rem, 5vw, 3rem);
@@ -125,4 +173,14 @@ const description =
     border-radius: 0 6px 6px 0;
     line-height: 1.55;
   }
+  .about-cta .cta-mail {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: var(--mono);
+    font-size: var(--t-sm);
+    letter-spacing: 0.02em;
+    color: var(--coral);
+    text-decoration: none;
+  }
+  .about-cta .cta-mail:hover { text-decoration: underline; }
 </style>
