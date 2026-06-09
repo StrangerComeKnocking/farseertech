@@ -5,11 +5,10 @@ interface Crumb { label: string; href?: string }
 interface Props { crumbs?: Crumb[] }
 const { crumbs = [] } = Astro.props;
 
-// Tiny client-side search index (the whole site is small).
 const index = [
-  { title: 'Home', url: '/', kw: 'home start' },
-  { title: FEATURED.title, url: FEATURED.href, kw: 'field note paid in production agents ownership ttl usage liabilities velocity durable artifact' },
-  { title: 'About', url: '/about', kw: 'about yusuf tinwala farseertech' },
+  { title: FEATURED.title, type: 'Field Note · № 01', url: FEATURED.href, kw: 'paid in production agents ownership ttl usage liabilities velocity durable artifact obligation' },
+  { title: 'About', type: 'Page', url: '/about', kw: 'about yusuf tinwala farseertech career credibility' },
+  { title: 'Home', type: 'Page', url: '/', kw: 'home start latest' },
 ];
 ---
 <header class="topbar">
@@ -31,7 +30,7 @@ const index = [
     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
       <circle cx="11" cy="11" r="7" /><path d="M16.5 16.5L21 21" />
     </svg>
-    <input id="tb-q" type="search" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search" />
+    <input id="tb-q" type="search" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search" aria-expanded="false" aria-controls="tb-res" />
     <ul id="tb-res" class="tb-results" role="listbox" hidden></ul>
   </div>
 </header>
@@ -39,61 +38,68 @@ const index = [
 <script define:vars={{ index }}>
   const input = document.getElementById('tb-q');
   const res = document.getElementById('tb-res');
-  let current = [];
+  let items = [];
+  let active = 0;
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  function run() {
+  function search() {
     const q = input.value.trim().toLowerCase();
-    current = q ? index.filter((it) => (it.title + ' ' + it.kw).toLowerCase().includes(q)).slice(0, 6) : [];
-    if (!current.length) { res.hidden = true; res.innerHTML = ''; return; }
-    res.innerHTML = current.map((it) => `<li role="option"><a href="${it.url}">${esc(it.title)}</a></li>`).join('');
-    res.hidden = false;
+    return q ? index.filter((it) => (it.title + ' ' + it.kw).toLowerCase().includes(q)).slice(0, 6) : [];
   }
-  input?.addEventListener('input', run);
-  input?.addEventListener('focus', run);
+  function render() {
+    items = search();
+    if (!input.value.trim()) { res.hidden = true; res.innerHTML = ''; input.setAttribute('aria-expanded', 'false'); return; }
+    active = 0;
+    if (!items.length) {
+      res.innerHTML = `<li class="tb-empty">No matches for "${esc(input.value.trim())}"</li>`;
+    } else {
+      res.innerHTML = items
+        .map((it, i) =>
+          `<li role="option" aria-selected="${i === 0}" class="tb-item${i === 0 ? ' active' : ''}" data-i="${i}">
+             <a href="${it.url}"><span class="tb-t">${esc(it.title)}</span><span class="tb-ty">${esc(it.type)}</span></a>
+           </li>`
+        )
+        .join('') + `<li class="tb-hint" aria-hidden="true">↑↓ to navigate · ↵ to open</li>`;
+    }
+    res.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  }
+  function move(n) {
+    const lis = [...res.querySelectorAll('.tb-item')];
+    if (!lis.length) return;
+    active = (n + lis.length) % lis.length;
+    lis.forEach((el, i) => { el.classList.toggle('active', i === active); el.setAttribute('aria-selected', i === active); });
+    lis[active].scrollIntoView({ block: 'nearest' });
+  }
+  input?.addEventListener('input', render);
+  input?.addEventListener('focus', render);
   input?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); if (current[0]) window.location.href = current[0].url; }
+    if (res.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(active + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(active - 1); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (items[active]) window.location.href = items[active].url; }
     else if (e.key === 'Escape') { input.value = ''; res.hidden = true; input.blur(); }
   });
-  input?.addEventListener('blur', () => setTimeout(() => { res.hidden = true; }, 160));
+  input?.addEventListener('blur', () => setTimeout(() => { res.hidden = true; input.setAttribute('aria-expanded', 'false'); }, 160));
 </script>
 
 <style>
   .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
     height: var(--topbar-h);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    display: flex; align-items: center; gap: 1rem;
     padding: 0 0.9rem 0 1.1rem;
     background: color-mix(in srgb, var(--paper) 86%, transparent);
     backdrop-filter: saturate(150%) blur(10px);
     border-bottom: 1px solid var(--line);
   }
   .tb-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex: none;
-    text-decoration: none;
-    color: var(--ink);
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: -0.01em;
+    display: inline-flex; align-items: center; gap: 0.5rem; flex: none;
+    text-decoration: none; color: var(--ink); font-weight: 600; font-size: 1rem; letter-spacing: -0.01em;
   }
   .tb-brand img { border-radius: 50%; }
 
-  .tb-crumbs {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    flex: 1;
-    min-width: 0;
-    font-size: 0.84rem;
-    color: var(--faint);
-  }
+  .tb-crumbs { display: flex; align-items: center; gap: 0.35rem; flex: 1; min-width: 0; font-size: 0.84rem; color: var(--faint); }
   .tb-crumb { display: inline-flex; align-items: center; gap: 0.35rem; min-width: 0; }
   .tb-crumb:first-child { padding-left: 0.3rem; }
   .tb-sep { color: var(--line-strong); }
@@ -102,55 +108,48 @@ const index = [
   .tb-current { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .tb-search {
-    position: relative;
-    flex: none;
+    position: relative; flex: none;
     width: min(15rem, 34vw);
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
+    display: flex; align-items: center; gap: 0.45rem;
     padding: 0.32rem 0.7rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 999px;
-    background: var(--card);
-    color: var(--faint);
-    transition: border-color 0.15s ease;
+    border: 1px solid var(--line-strong); border-radius: 999px;
+    background: var(--card); color: var(--faint);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .tb-search:focus-within { border-color: var(--ink-soft); }
-  #tb-q {
-    width: 100%;
-    border: none;
-    background: none;
-    outline: none;
-    font-family: var(--sans);
-    font-size: 0.85rem;
-    color: var(--ink);
-  }
+  .tb-search:focus-within { border-color: var(--ink-soft); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 5%, transparent); }
+  #tb-q { width: 100%; border: none; background: none; outline: none; font-family: var(--sans); font-size: 0.85rem; color: var(--ink); }
   #tb-q::placeholder { color: var(--faint); }
   #tb-q::-webkit-search-cancel-button { display: none; }
 
   .tb-results {
     position: absolute;
-    top: calc(100% + 0.5rem);
+    top: calc(100% + 0.55rem);
     right: 0;
-    left: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0.3rem;
+    width: min(20rem, 80vw);
+    list-style: none; margin: 0; padding: 0.35rem;
     background: var(--card);
     border: 1px solid var(--line-strong);
-    border-radius: var(--r);
-    box-shadow: var(--shadow);
+    border-radius: 14px;
+    box-shadow: 0 18px 44px -16px rgba(43, 42, 51, 0.3), 0 2px 8px rgba(43, 42, 51, 0.06);
+    max-height: 70vh; overflow: auto;
     z-index: 120;
+    animation: tb-pop 0.13s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  .tb-results li a {
-    display: block;
-    padding: 0.5rem 0.6rem;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--ink);
-    font-size: 0.88rem;
+  @keyframes tb-pop { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  .tb-item a {
+    display: flex; flex-direction: column; gap: 0.12rem;
+    padding: 0.5rem 0.6rem; border-radius: 9px; text-decoration: none;
   }
-  .tb-results li a:hover { background: color-mix(in srgb, var(--indigo) 9%, transparent); }
+  .tb-t { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.25; }
+  .tb-ty { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); }
+  .tb-item.active a, .tb-item a:hover { background: color-mix(in srgb, var(--coral) 8%, transparent); }
+  .tb-item.active .tb-ty { color: var(--coral); }
+  .tb-empty { padding: 0.7rem 0.7rem; font-size: 0.85rem; color: var(--faint); }
+  .tb-hint {
+    margin-top: 0.3rem; padding: 0.45rem 0.6rem 0.2rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--faint);
+  }
 
   @media (max-width: 60rem) {
     .tb-crumbs { display: none; }
