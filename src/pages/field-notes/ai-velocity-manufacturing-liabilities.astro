@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, FEATURED } from '../../consts';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: FEATURED.title,
+  description: FEATURED.description,
+  datePublished: FEATURED.date.toISOString(),
+  author: { '@type': 'Person', name: SITE.owner },
+  publisher: { '@type': 'Organization', name: SITE.title },
+  mainEntityOfPage: new URL(FEATURED.href, SITE.url).href,
+  image: new URL(SITE.ogImage, SITE.url).href,
+  articleSection: 'Field Notes',
+};
+---
+<BaseLayout title={FEATURED.title} description={FEATURED.description} type="article" jsonLd={jsonLd}>
+  <article class="post">
+    <div class="sheet">
+      <header class="mast reveal d1">
+        <span class="name">Paid in <b>Production</b></span>
+        <span class="meta">№ 01 · Field Note</span>
+      </header>
+      <div class="mast-sub reveal d1">For the people accountable when the AI ships</div>
+
+      <h1 class="reveal d2">Your AI velocity is <span class="hl">manufacturing liabilities</span></h1>
+
+      <section class="reveal d2">
+        <p class="lead">If you lead engineers, you'll recognize this one. It usually starts as the best week of the quarter — and ends as somebody else's 3 a.m.</p>
+        <p>This isn't an argument against speed. Agents make creation cheap — they just don't make <em>ownership</em> cheap. The failure mode isn't velocity; it's the durable artifact nobody signed up to own. Here's how it goes:</p>
+      </section>
+
+      <figure class="comic-img reveal d3">
+        <img id="comicimg" src="/images/post01-comic.png" alt="The life of an agent-built tool, a comic in three panels. Day 1: a builder ships an agent-built tool, thrilled, surrounded by /vibe and works-on-my-machine stickers. Day 60: the builder leaves for a new team, waving goodbye, their tools list now out of office forever. Day 365+: a different engineer is paged at night by an alert from a tool nobody owns that somehow has prod access, ownership unknown. Footer: the builder moves on, the bill stays. The bill always finds a forwarding address." />
+        <span class="comic-badge">🔍 Tap to zoom</span>
+      </figure>
+      <p class="comic-hint reveal d3">🔍 Panel text is small on phones — tap the comic to enlarge.</p>
+
+      <section class="reveal d4">
+        <p>Strip away the cartoon and the mechanism is serious: the agent made the artifact cheap to <em>create</em>, but nothing made it cheap to <em>own</em>. The friction everyone wanted gone was doing quiet work — it was the gate that forced someone to decide whether a thing was worth owning before it existed.</p>
+        <p class="turn">The friction was not just the obstacle, it was also the filter.</p>
+        <p>And this isn't only about internal tools. The artifact might be a dashboard, a script, a generated API, a workflow automation, a data pipeline, a runbook, a remediation bot — or any other feature you ship. The arc is identical. Each one adds to your <strong>obligation surface</strong>: the set of things someone is now on the hook to run, secure, and keep correct. Agents grow that surface far faster than anyone is growing the list of owners.</p>
+        <p class="restate">The problem isn't that agents create things. It's that temporary things quietly become durable.</p>
+      </section>
+
+      <section class="sol reveal d5">
+        <div class="h">What actually fixes it</div>
+        <p class="hsub">The fix isn't slower agents. It's treating agent-built artifacts like production assets the moment they become durable. Build whatever you want — prototype aggressively. But once an artifact is durable, it needs three things:</p>
+
+        <div class="item">
+          <div class="n">01</div>
+          <div class="t">Ownership is a precondition</div>
+          <div class="d">An artifact earns durability only when it has a named owner and the one decision it serves. Nobody willing to maintain it? Then it stays a prototype, or it's deleted — it never becomes durable. The orphans are the whole problem.</div>
+        </div>
+        <div class="item">
+          <div class="n">02</div>
+          <div class="t">Standardize one signal: usage</div>
+          <div class="d">Pick a single way to answer: <em>is anyone actually depending on this?</em> Not just human opens — dashboard views, API calls, downstream reads, alert references, workflow runs, dependency links. You can't expire what you can't measure.</div>
+        </div>
+        <div class="item">
+          <div class="n">03</div>
+          <div class="t">Then give everything a TTL</div>
+          <div class="d">Treat a durable artifact like a database record: append it, but with a time-to-live. Usage renews the lease; silence lets it lapse — no reads in a quarter and it archives itself. Rare-but-critical artifacts don't get exempted by vibes; they get an explicit bypass for incidents, compliance, or migrations. <span class="joke">We got very good at <code>INSERT</code>. We just never wrote the <code>TTL</code> — so the stack became an append-only log nobody compacts.</span></div>
+        </div>
+      </section>
+
+      <figure class="reveal d6">
+        <svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A mock tools table where most rows have expired from no usage and only the used one is alive">
+          <rect x="2" y="2" width="636" height="286" rx="12" fill="#6c79f5" fill-opacity="0.07" stroke="#e6e0d3" stroke-width="1"/>
+          <text x="22" y="34" font-family="IBM Plex Mono,monospace" font-size="13" fill="#5f5d6b">$ tools --list <tspan fill="#9b98a6"># append-only · no TTL set</tspan></text>
+          <text x="22"  y="66" font-family="IBM Plex Mono,monospace" font-size="12" letter-spacing="1.5" fill="#2b2a33">TOOL</text>
+          <text x="330" y="66" font-family="IBM Plex Mono,monospace" font-size="12" letter-spacing="1.5" fill="#2b2a33">LAST USED</text>
+          <text x="508" y="66" font-family="IBM Plex Mono,monospace" font-size="12" letter-spacing="1.5" fill="#2b2a33">STATUS</text>
+          <line x1="22" y1="76" x2="618" y2="76" stroke="#2b2a33" stroke-width="1.4"/>
+          <g opacity="0.6" font-family="IBM Plex Mono,monospace" font-size="14">
+            <text x="22"  y="106" fill="#2b2a33">metrics-dash-v2</text>
+            <line x1="22" y1="101" x2="160" y2="101" stroke="#f5634f" stroke-width="1"/>
+            <text x="330" y="106" fill="#5f5d6b">8 months ago</text>
+          </g>
+          <text x="508" y="106" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#f5634f">EXPIRED</text>
+          <line x1="22" y1="120" x2="618" y2="120" stroke="#ece6d8" stroke-width="1"/>
+          <g opacity="0.6" font-family="IBM Plex Mono,monospace" font-size="14">
+            <text x="22"  y="150" fill="#2b2a33">oncall-helper</text>
+            <line x1="22" y1="145" x2="140" y2="145" stroke="#f5634f" stroke-width="1"/>
+            <text x="330" y="150" fill="#5f5d6b">never opened</text>
+          </g>
+          <text x="508" y="150" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#f5634f">EXPIRED</text>
+          <line x1="22" y1="164" x2="618" y2="164" stroke="#ece6d8" stroke-width="1"/>
+          <g font-family="IBM Plex Mono,monospace" font-size="14">
+            <text x="22"  y="194" fill="#2b2a33" font-weight="600">latency-rollup</text>
+            <text x="330" y="194" fill="#5f5d6b">yesterday</text>
+          </g>
+          <text x="508" y="194" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#15b3a2">✓ ALIVE</text>
+          <line x1="22" y1="208" x2="618" y2="208" stroke="#ece6d8" stroke-width="1"/>
+          <g opacity="0.6" font-family="IBM Plex Mono,monospace" font-size="14">
+            <text x="22"  y="238" fill="#2b2a33">cost-explorer-fork</text>
+            <line x1="22" y1="233" x2="180" y2="233" stroke="#f5634f" stroke-width="1"/>
+            <text x="330" y="238" fill="#5f5d6b">5 months ago</text>
+          </g>
+          <text x="508" y="238" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#f5634f">EXPIRED</text>
+          <line x1="22" y1="252" x2="618" y2="252" stroke="#ece6d8" stroke-width="1"/>
+          <text x="320" y="280" text-anchor="middle" font-family="Newsreader,serif" font-style="italic" font-size="16" fill="#5f5d6b">Usage is the TTL signal most teams forget to collect.</text>
+        </svg>
+        <figcaption>three of four were <em>append-only</em>. nobody set the <em>TTL</em>.</figcaption>
+      </figure>
+
+      <section class="close reveal d6">
+        <p>Each of these does the job the old friction did for free: it forces the question speed made cheap to skip — not <span class="q">"can we build it,"</span> but <span class="q">"who depends on it, and who owns it, a year from now."</span></p>
+        <p class="thesis">Agents make creation cheap. They don't make ownership cheap. Any artifact that becomes durable without an owner, a usage signal, and a renewal path isn't velocity — it's <span class="dl">deferred liability</span>.</p>
+      </section>
+
+      <div class="filed reveal d6">
+        <span>Paid in Production</span>
+        <span>№ 01</span>
+      </div>
+    </div>
+  </article>
+
+  <div id="lb" class="lb"><img id="lbimg" alt="Comic, enlarged" /></div>
+
+  <script>
+    const c = document.getElementById('comicimg');
+    const lb = document.getElementById('lb');
+    const li = document.getElementById('lbimg') as HTMLImageElement | null;
+    if (c && lb && li) {
+      c.addEventListener('click', () => { li.src = (c as HTMLImageElement).src; lb.classList.add('open'); });
+      lb.addEventListener('click', () => lb.classList.remove('open'));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lb.classList.remove('open'); });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .post {
+    padding: clamp(0.5rem, 2vw, 1.5rem) 0 0;
+    background:
+      radial-gradient(ellipse 46% 34% at 6% 4%, rgba(245, 166, 35, 0.07), transparent 60%),
+      radial-gradient(ellipse 44% 32% at 96% 12%, rgba(108, 121, 245, 0.06), transparent 60%),
+      radial-gradient(ellipse 50% 38% at 88% 96%, rgba(245, 99, 79, 0.055), transparent 62%),
+      radial-gradient(ellipse 42% 32% at 4% 92%, rgba(21, 179, 162, 0.05), transparent 62%);
+  }
+  .sheet { max-width: 712px; margin: 0 auto; padding: 0 28px 90px; font-size: 20px; line-height: 1.68; }
+
+  .reveal { opacity: 0; transform: translateY(10px); animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .d1 { animation-delay: 0.04s; } .d2 { animation-delay: 0.12s; } .d3 { animation-delay: 0.22s; }
+  .d4 { animation-delay: 0.34s; } .d5 { animation-delay: 0.46s; } .d6 { animation-delay: 0.58s; }
+
+  .mast { display: flex; justify-content: space-between; align-items: baseline; padding: 30px 0 13px; border-bottom: 2px solid var(--ink); }
+  .mast .name { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; }
+  .mast .name b { color: var(--coral); }
+  .mast .meta { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.18em; text-transform: uppercase; }
+  .mast-sub { font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.15em; text-transform: uppercase; padding: 8px 0 0; }
+
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(34px, 5.6vw, 52px); line-height: 1.07; letter-spacing: -0.02em; margin: 42px 0 28px; max-width: 15ch; }
+  h1 .hl { color: var(--coral); }
+
+  .sheet p { font-size: 20px; line-height: 1.68; max-width: 60ch; }
+  .sheet p + p { margin-top: 15px; }
+  .lead { font-size: 21px; line-height: 1.55; }
+  code { font-family: var(--mono); font-size: 0.82em; background: rgba(108, 121, 245, 0.14); padding: 1px 6px; border-radius: 5px; color: var(--indigo); font-weight: 500; }
+
+  .turn { font-style: italic; color: var(--coral); font-size: 21px; font-weight: 500; margin: 30px 0; letter-spacing: -0.01em; max-width: none; }
+  .restate { font-weight: 600; font-size: 21px; line-height: 1.42; letter-spacing: -0.01em; margin: 26px 0 0; max-width: 58ch; }
+
+  .sol { margin-top: 44px; border-top: 2px solid var(--ink); padding-top: 26px; }
+  .sol .h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--indigo); margin-bottom: 6px; }
+  .sol .hsub { font-size: 20px; margin-bottom: 22px; max-width: 58ch; }
+  .item { display: grid; grid-template-columns: 42px 1fr; gap: 3px 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .item:first-of-type { border-top: 1px solid var(--line); }
+  .item .n { font-family: var(--mono); font-size: 15px; font-weight: 600; padding-top: 3px; }
+  .item:nth-child(2) .n { color: var(--teal); } .item:nth-child(3) .n { color: var(--gold); } .item:nth-child(4) .n { color: var(--violet); }
+  .item .t { font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+  .item .d { grid-column: 2; font-size: 17px; line-height: 1.55; color: var(--ink-soft); max-width: 54ch; }
+  .item .d .joke { color: var(--ink); font-style: italic; }
+
+  .close { margin-top: 30px; }
+  .close p { font-size: 20px; line-height: 1.62; }
+  .close .q { font-style: italic; color: var(--coral); }
+  .close .thesis { font-family: var(--serif); font-weight: 600; font-size: clamp(22px, 3.7vw, 28px); line-height: 1.3; letter-spacing: -0.015em; margin-top: 24px; padding-top: 22px; border-top: 2px solid var(--ink); max-width: none; }
+  .close .thesis .dl { color: var(--coral); }
+
+  .filed { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  figure { margin: 34px 0 12px; }
+  .comic-img { margin: 36px 0 16px; position: relative; }
+  .comic-img img { display: block; width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 12px; box-shadow: 6px 7px 0 rgba(43, 42, 51, 0.12); cursor: zoom-in; }
+  .comic-hint { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.03em; text-align: center; margin-top: 10px; display: none; }
+  .comic-badge { position: absolute; top: 12px; right: 12px; background: rgba(43, 42, 51, 0.85); color: #fff; font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 6px 10px; border-radius: 8px; letter-spacing: 0.03em; display: none; pointer-events: none; }
+  .lb { display: none; position: fixed; inset: 0; background: rgba(24, 22, 26, 0.93); z-index: 80; padding: 14px; overflow: auto; cursor: zoom-out; }
+  .lb.open { display: flex; align-items: flex-start; justify-content: center; }
+  .lb img { width: auto; max-width: 1500px; height: auto; border-radius: 8px; }
+  figcaption { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.04em; text-align: center; margin-top: 14px; }
+  figcaption em { color: var(--coral); font-style: normal; }
+
+  @media (max-width: 560px) {
+    .sheet { padding: 0 18px 70px; font-size: 18px; }
+    .sheet p, .close p { font-size: 18px; }
+    .mast { flex-direction: column; gap: 6px; }
+    .filed { flex-direction: column; gap: 6px; }
+    .item { grid-template-columns: 32px 1fr; gap: 3px 12px; }
+    .comic-hint { display: block; }
+    .comic-badge { display: inline-block; }
+    .lb img { max-width: none; }
+  }
+</style>

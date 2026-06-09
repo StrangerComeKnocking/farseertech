@@ -1,90 +1,32 @@
 ---
-import { SITE, PILLARS, PILLAR_ORDER } from '../consts';
-import Icon from './Icon.astro';
+import { SITE } from '../consts';
 const year = new Date().getFullYear();
-const social = SITE.social;
 ---
 <footer class="ft">
-  <div class="container ft-in">
-    <div class="ft-brand">
-      <a class="ft-logo" href="/">
-        <Icon name="farseer" size={22} />
-        <span>{SITE.title}</span>
-      </a>
-      <p class="ft-line">{SITE.tagline}</p>
-    </div>
-
-    <nav class="ft-nav" aria-label="Pillars">
-      {PILLAR_ORDER.map((id) => (
-        <a href={`/${id}`}>{PILLARS[id].name}</a>
-      ))}
-    </nav>
-
-    <div class="ft-meta">
-      <div class="ft-social">
-        <a href="/rss.xml">RSS</a>
-        {social.linkedin && <a href={social.linkedin}>LinkedIn</a>}
-        {social.github && <a href={social.github}>GitHub</a>}
-        {social.x && <a href={social.x}>X</a>}
-      </div>
-      <p class="ft-copy">© {year} {SITE.owner}</p>
-    </div>
-  </div>
+  <span class="ft-copy">© {year} {SITE.owner} · {SITE.title}</span>
+  <span class="ft-links">
+    <a href="/about">About</a>
+    <a href="/rss.xml">RSS</a>
+  </span>
 </footer>
 
 <style>
   .ft {
-    margin-top: clamp(3rem, 7vw, 5rem);
-    border-top: 1px solid var(--line);
-    background: color-mix(in srgb, var(--card) 70%, var(--paper));
-    padding-block: 2rem 1.6rem;
-  }
-  .ft-in {
+    flex: none;
     display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 1.4rem 2.4rem;
     justify-content: space-between;
-  }
-  .ft-logo {
-    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: var(--ink);
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 1.15rem;
-  }
-  .ft-line {
-    margin-top: 0.4rem;
-    font-family: var(--mono);
-    font-size: var(--t-xs);
-    color: var(--faint);
-    letter-spacing: 0.02em;
-  }
-  .ft-nav {
-    display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.2rem;
-  }
-  .ft-nav a {
+    gap: 0.6rem 1.4rem;
+    padding: 1.5rem clamp(1.4rem, 5vw, 3.5rem);
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
     font-family: var(--mono);
     font-size: var(--t-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-    text-decoration: none;
+    letter-spacing: 0.06em;
+    color: var(--faint);
   }
-  .ft-nav a:hover { color: var(--ink); }
-  .ft-meta { text-align: right; }
-  .ft-social { display: flex; gap: 0.9rem; justify-content: flex-end; }
-  .ft-social a {
-    font-family: var(--mono);
-    font-size: var(--t-xs);
-    color: var(--coral);
-    text-decoration: none;
-  }
-  .ft-social a:hover { text-decoration: underline; }
-  .ft-copy { margin-top: 0.5rem; font-family: var(--mono); font-size: var(--t-2xs); color: var(--faint); }
+  .ft-links { display: flex; gap: 1.2rem; }
+  .ft-links a { color: var(--ink-soft); text-decoration: none; }
+  .ft-links a:hover { color: var(--coral); }
 </style>

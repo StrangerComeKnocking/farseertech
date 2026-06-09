@@ -1,26 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Icon from '../components/Icon.astro';
 ---
 <BaseLayout title="Not found" description="That page couldn't be found.">
-  <section class="nf container">
+  <section class="nf">
     <p class="nf-code mono-label">404 · not found</p>
     <h1 class="nf-title">This request didn't survive production.</h1>
-    <p class="nf-lede">
-      The page you're after has moved, been renamed, or never shipped. Let's route
-      you back to something solid.
-    </p>
+    <p class="nf-lede">The page you're after has moved, been renamed, or never shipped. Let's route you back to something solid.</p>
     <div class="nf-actions">
-      <a class="btn" href="/">Back to the console</a>
-      <button class="btn btn-quiet" type="button" data-search-open>
-        <Icon name="search" size={16} />Search
-      </button>
+      <a class="btn" href="/">Back home</a>
+      <a class="btn btn-quiet" href="/field-notes/ai-velocity-manufacturing-liabilities">Read the field note</a>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .nf { padding-block: clamp(3.5rem, 10vw, 7rem); max-width: 44rem; }
+  .nf { padding: clamp(3.5rem, 10vw, 7rem) clamp(1.4rem, 5vw, 3.5rem); max-width: 44rem; }
   .nf-code { color: var(--coral); }
   .nf-title { margin: 0.6rem 0 0; font-size: var(--t-2xl); letter-spacing: -0.02em; line-height: 1.08; max-width: 16ch; }
   .nf-lede { margin-top: 1rem; font-size: var(--t-lg); color: var(--ink-soft); max-width: 44ch; line-height: 1.45; }

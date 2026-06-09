@@ -1,168 +1,115 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import PillarCard from '../components/PillarCard.astro';
-import Icon from '../components/Icon.astro';
-import { SITE, PILLARS, PILLAR_ORDER } from '../consts';
-import { getPublishedPosts, pickHighlight } from '../utils/posts';
-
-const posts = await getPublishedPosts();
-const highlight = pickHighlight(posts);
-const counts = Object.fromEntries(
-  PILLAR_ORDER.map((id) => [id, posts.filter((p) => p.data.pillar === id).length])
-);
-let recent = posts.filter((p) => p.data.pillar === 'field-notes' && p.id !== highlight?.id).slice(0, 3);
-if (recent.length === 0) recent = posts.filter((p) => p.id !== highlight?.id).slice(0, 3);
+import { SITE, FEATURED } from '../consts';
+const titleBefore = FEATURED.title.replace(FEATURED.highlight, '').trim();
 ---
 <BaseLayout>
-  <div class="console container">
-    <!-- Positioning band -->
-    <section class="band">
-      <div class="band-text">
-        <p class="kicker mono-label">FarseerTech</p>
-        <h1 class="positioning">{SITE.positioning}</h1>
-        <p class="tagline">{SITE.tagline}</p>
+  <section class="home">
+    <header class="home-head">
+      <p class="eyebrow mono-label">FarseerTech · Field Notes</p>
+      <h1 class="home-title">{SITE.positioning}</h1>
+      <p class="home-tag">{SITE.tagline}</p>
+    </header>
+
+    <a class="feature" href={FEATURED.href}>
+      <div class="feature-media">
+        <img src={FEATURED.comic} alt="Three-panel comic: the life of an agent-built tool from ship day to an unowned 3 a.m. page." loading="eager" />
       </div>
-      <button class="console-search" type="button" data-search-open>
-        <Icon name="search" size={17} />
-        <span>Search the publication</span>
-        <kbd>/</kbd>
-      </button>
-    </section>
+      <div class="feature-body">
+        <p class="feature-kicker mono-label">{FEATURED.series} · {FEATURED.number} · {FEATURED.kicker}</p>
+        <h2 class="feature-title">{titleBefore} <span class="hl">{FEATURED.highlight}</span></h2>
+        <p class="feature-dek">{FEATURED.description}</p>
+        <span class="feature-cta">Read the field note <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
 
-    <!-- Weekly highlight -->
-    {highlight && (
-      <section class="hl">
-        <p class="block-label mono-label">Weekly Highlight</p>
-        <ArticleCard post={highlight} variant="highlight" />
-      </section>
-    )}
-
-    <!-- Pillars | Recent -->
-    <div class="grid">
-      <section class="pillars">
-        <p class="block-label mono-label">Pillars</p>
-        <div class="pillars-grid">
-          {PILLAR_ORDER.map((id) => <PillarCard pillar={PILLARS[id]} count={counts[id]} />)}
-        </div>
-      </section>
-
-      <section class="recent">
-        <p class="block-label mono-label">Recent Field Notes</p>
-        <div class="recent-list">
-          {recent.map((p) => <ArticleCard post={p} />)}
-        </div>
-      </section>
-    </div>
-
-    <!-- Owner card -->
     <aside class="owner">
-      <span class="owner-mark"><Icon name="farseer" size={26} /></span>
-      <div class="owner-id">
-        <p class="owner-name">{SITE.owner}</p>
-        <p class="owner-role mono-label">{SITE.role}</p>
-      </div>
-      <p class="owner-blurb">
-        Engineering leader writing about hyperscale AI products, AIOps, and agentic
-        architecture — grounded in operating real systems at scale.
+      <img class="owner-mark" src="/icons/farseertech-circle-96.png" alt="" width="34" height="34" />
+      <p class="owner-text">
+        <strong>{SITE.owner}</strong> writes <a href="/about">FarseerTech</a> — the parts of engineering
+        that only get obvious after systems reach production scale.
       </p>
-      <a class="owner-link" href="/about">About<Icon name="arrow-right" size={15} /></a>
     </aside>
-  </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .console {
-    padding-top: clamp(1.6rem, 4vw, 2.6rem);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.2rem, 2.6vw, 1.8rem);
-  }
-
-  /* Band */
-  .band {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .kicker { color: var(--coral); }
-  .positioning {
-    margin-top: 0.5rem;
+  .home { padding: clamp(2rem, 5vw, 3.5rem) clamp(1.4rem, 5vw, 3.5rem); max-width: 64rem; }
+  .home-head { max-width: 40rem; }
+  .eyebrow { color: var(--coral); }
+  .home-title {
+    margin-top: 0.7rem;
     font-size: var(--t-2xl);
     line-height: 1.08;
     letter-spacing: -0.02em;
-    max-width: 20ch;
+    max-width: 18ch;
   }
-  .tagline {
-    margin-top: 0.45rem;
+  .home-tag {
+    margin-top: 0.6rem;
     font-family: var(--mono);
     font-size: var(--t-sm);
     color: var(--ink-soft);
-    letter-spacing: 0.01em;
-  }
-  .console-search {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-soft);
-    background: var(--card); border: 1px solid var(--line-strong); border-radius: 999px;
-    padding: 0.6rem 0.85rem; cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
-  .console-search:hover { border-color: var(--ink-soft); color: var(--ink); }
-  .console-search kbd {
-    font-family: var(--mono); font-size: 0.7rem; color: var(--faint);
-    border: 1px solid var(--line-strong); border-radius: 5px; padding: 0.15rem 0.36rem;
   }
 
-  .block-label { margin-bottom: 0.6rem; }
-
-  /* Grid */
-  .grid {
+  .feature {
     display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
-    gap: clamp(1.2rem, 3vw, 2rem);
-  }
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.7rem;
-  }
-  .recent-list { display: flex; flex-direction: column; gap: 0.7rem; }
-
-  /* Owner */
-  .owner {
-    display: grid;
-    grid-template-columns: auto auto 1fr auto;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(1.2rem, 3vw, 2.4rem);
     align-items: center;
-    gap: 0.9rem 1.1rem;
-    padding: 0.9rem 1.1rem;
+    margin-top: clamp(2rem, 5vw, 3rem);
+    padding: clamp(1.2rem, 2.5vw, 1.8rem);
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: var(--r);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .owner-mark {
-    display: grid; place-items: center;
-    width: 2.4rem; height: 2.4rem; border-radius: 10px;
-    color: var(--ink); background: var(--paper); border: 1px solid var(--line);
+  .feature:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in srgb, var(--coral) 35%, var(--line));
   }
-  .owner-name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; }
-  .owner-role { margin-top: 0.1rem; }
-  .owner-blurb { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.45; max-width: 48ch; }
-  .owner-link {
-    display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap;
-    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink); text-decoration: none;
-    border: 1px solid var(--line-strong); border-radius: 999px; padding: 0.4rem 0.8rem;
+  .feature-media img {
+    width: 100%;
+    border: 2.5px solid var(--ink);
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
   }
-  .owner-link:hover { border-color: var(--ink); }
+  .feature-kicker { color: var(--ink-soft); }
+  .feature-title {
+    margin-top: 0.5rem;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .feature-title .hl { color: var(--coral); }
+  .feature-dek {
+    margin-top: 0.7rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 42ch;
+  }
+  .feature-cta {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 1.1rem;
+    font-family: var(--mono); font-size: var(--t-sm); font-weight: 500;
+    color: var(--coral);
+  }
+  .feature:hover .feature-cta span { transform: translateX(4px); transition: transform 0.2s ease; }
 
-  @media (max-width: 56rem) {
-    .grid { grid-template-columns: 1fr; }
-    .owner { grid-template-columns: auto 1fr; }
-    .owner-blurb { grid-column: 1 / -1; }
-    .owner-link { grid-column: 1 / -1; justify-self: start; }
+  .owner {
+    display: flex; align-items: center; gap: 0.9rem;
+    margin-top: clamp(1.8rem, 4vw, 2.6rem);
+    max-width: 46rem;
   }
-  @media (max-width: 30rem) {
-    .pillars-grid { grid-template-columns: 1fr; }
+  .owner-mark { width: 2.1rem; height: 2.1rem; border-radius: 50%; flex: none; }
+  .owner-text { font-size: 1.02rem; color: var(--ink-soft); line-height: 1.5; }
+  .owner-text strong { color: var(--ink); }
+  .owner-text a { color: var(--indigo); }
+
+  @media (max-width: 48rem) {
+    .feature { grid-template-columns: 1fr; }
   }
 </style>

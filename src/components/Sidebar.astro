@@ -1,0 +1,119 @@
+---
+import { SITE, NAV } from '../consts';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(href + '/') || path === href;
+---
+<aside class="sidebar">
+  <div class="sb-head">
+    <a class="sb-brand" href="/" aria-label={`${SITE.title} — home`}>
+      <img class="sb-logo" src="/icons/farseertech-circle-128.png" alt="" width="40" height="40" />
+      <span class="sb-word">{SITE.title}</span>
+    </a>
+    <p class="sb-tag">{SITE.positioning}</p>
+  </div>
+
+  <nav class="sb-nav" aria-label="Primary">
+    {NAV.map((item) => (
+      <a href={item.href} class={isActive(item.href) ? 'active' : ''}>
+        <span class="sb-dot" aria-hidden="true"></span>{item.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="sb-foot">
+    <p class="sb-owner">{SITE.owner}</p>
+    <p class="sb-role mono-label">{SITE.role}</p>
+    <a class="sb-rss" href="/rss.xml">RSS</a>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 1.8rem 1.5rem;
+    border-right: 1px solid var(--line);
+    background: color-mix(in srgb, var(--card) 55%, var(--paper));
+  }
+  .sb-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sb-logo { width: 2.5rem; height: 2.5rem; border-radius: 50%; }
+  .sb-word { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; letter-spacing: -0.02em; }
+  .sb-tag {
+    margin-top: 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--ink-soft);
+    max-width: 22ch;
+  }
+
+  .sb-nav { display: flex; flex-direction: column; gap: 0.15rem; }
+  .sb-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .sb-dot {
+    width: 0.4rem; height: 0.4rem; border-radius: 50%;
+    background: var(--line-strong);
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .sb-nav a:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); }
+  .sb-nav a.active { color: var(--ink); background: color-mix(in srgb, var(--coral) 9%, transparent); }
+  .sb-nav a.active .sb-dot { background: var(--coral); transform: scale(1.2); }
+
+  .sb-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.1rem; }
+  .sb-owner { font-family: var(--serif); font-weight: 600; font-size: 1rem; }
+  .sb-role { margin-top: 0.05rem; }
+  .sb-rss {
+    margin-top: 0.7rem; align-self: start;
+    font-family: var(--mono); font-size: var(--t-xs); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--coral); text-decoration: none;
+  }
+  .sb-rss:hover { text-decoration: underline; }
+
+  /* Mobile: become a compact top bar */
+  @media (max-width: 60rem) {
+    .sidebar {
+      position: sticky;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.1rem;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: saturate(140%) blur(8px);
+      background: color-mix(in srgb, var(--paper) 85%, transparent);
+      z-index: 50;
+    }
+    .sb-tag, .sb-foot { display: none; }
+    .sb-head { display: flex; align-items: center; }
+    .sb-logo { width: 2rem; height: 2rem; }
+    .sb-word { font-size: 1.2rem; }
+    .sb-nav { flex-direction: row; gap: 0.3rem; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+    .sb-nav a { padding: 0.4rem 0.6rem; }
+    .sb-dot { display: none; }
+  }
+</style>
