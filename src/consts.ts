@@ -3,11 +3,10 @@
 export const SITE = {
   title: 'FarseerTech',
   owner: 'Yusuf Tinwala',
-  role: 'Founder',
   positioning: 'Solving complicated engineering problems, frugally.',
   tagline: 'Seeing the production bill before it arrives.',
   description:
-    'FarseerTech is an engineering practice that solves complicated problems frugally — simpler systems, leaner teams, lower cost. Field notes and senior engineering judgment from Yusuf Tinwala.',
+    'FarseerTech solves complicated engineering problems, frugally — simpler systems, leaner teams, lower cost. Field notes, and frank second opinions before you commit the budget.',
   url: 'https://farseertech.com',
   ogImage: '/icons/social-card-1200x630.png',
   // `email` is the public contact address (footer + About CTA). `rss` is the feed

@@ -1,5 +1,5 @@
 ---
-import { SITE, NAV } from '../consts';
+import { NAV } from '../consts';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
@@ -26,11 +26,6 @@ const isActive = (href: string) =>
       );
     })}
   </nav>
-
-  <div class="sb-foot">
-    <p class="sb-owner">{SITE.owner}</p>
-    <p class="sb-role mono-label">{SITE.role}</p>
-  </div>
 </aside>
 
 <style>
@@ -103,10 +98,6 @@ const isActive = (href: string) =>
   .sb-sub a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, transparent); }
   .sb-sub a.active { color: var(--ink); font-weight: 500; background: color-mix(in srgb, var(--coral) 8%, transparent); }
 
-  .sb-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.1rem; }
-  .sb-owner { font-weight: 600; font-size: 0.96rem; }
-  .sb-role { margin-top: 0.05rem; }
-
   @media (max-width: 60rem) {
     .sidebar {
       position: sticky;
@@ -125,7 +116,6 @@ const isActive = (href: string) =>
       z-index: 40;
     }
     .sidebar::-webkit-scrollbar { display: none; }
-    .sb-foot { display: none; }
     .sb-nav { flex-direction: row; gap: 0.2rem; }
     .sb-item { flex-direction: row; }
     .sb-item > a { padding: 0.4rem 0.65rem; white-space: nowrap; }
