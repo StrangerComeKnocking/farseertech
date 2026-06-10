@@ -2,13 +2,17 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE, FEATURED } from '../../consts';
 
+// timeZone UTC: the date is authored as 'YYYY-MM-DD' (UTC midnight) — formatting in the
+// build machine's local zone would shift it back a day.
+const fmtDate = FEATURED.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: FEATURED.title,
   description: FEATURED.description,
   datePublished: FEATURED.date.toISOString(),
-  author: { '@type': 'Person', name: SITE.owner },
+  author: { '@type': 'Person', name: FEATURED.author },
   publisher: { '@type': 'Organization', name: SITE.title },
   mainEntityOfPage: new URL(FEATURED.href, SITE.url).href,
   image: new URL(SITE.ogImage, SITE.url).href,
@@ -25,6 +29,12 @@ const jsonLd = {
       <div class="mast-sub reveal d1">For the people accountable when the AI ships</div>
 
       <h1 class="reveal d2">Your AI velocity is <span class="hl">manufacturing liabilities</span></h1>
+
+      <p class="byline reveal d2">
+        By <a href="/about">{FEATURED.author}</a>
+        <span aria-hidden="true">·</span>
+        <time datetime={FEATURED.date.toISOString().slice(0, 10)}>{fmtDate}</time>
+      </p>
 
       <section class="reveal d2">
         <p class="lead">If you lead engineers, you'll recognize this one. It usually starts as the best week of the quarter — and ends as somebody else's 3 a.m.</p>
@@ -155,6 +165,17 @@ const jsonLd = {
 
   h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(34px, 5.6vw, 52px); line-height: 1.07; letter-spacing: -0.02em; margin: 42px 0 28px; max-width: 15ch; }
   h1 .hl { color: var(--coral); }
+
+  /* `.sheet .byline` (not `.byline`) so it out-specifies the `.sheet p` base rule */
+  .sheet .byline {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.7ch;
+    margin: -14px 0 34px;
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--faint);
+  }
+  .sheet .byline a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  .sheet .byline a:hover { color: var(--coral); border-color: var(--coral); }
 
   .sheet p { font-size: 20px; line-height: 1.68; max-width: 60ch; }
   .sheet p + p { margin-top: 15px; }

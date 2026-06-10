@@ -29,6 +29,7 @@ export interface FieldNote {
   title: string;       // full headline
   highlight: string;   // the coral-emphasized phrase WITHIN the title
   description: string;  // 1–2 sentences — powers the home card, RSS, and <head>/SEO
+  author: string;      // full name — the visible byline + JSON-LD author (names live ONLY in articles + About)
   date: Date;
   href: string;        // "/field-notes/<slug>"
   comic: string;       // "/images/<file>" — the note's lead image
@@ -43,6 +44,7 @@ export const FEATURED: FieldNote = {
   highlight: 'manufacturing liabilities',
   description:
     "Agents make creation cheap — they don't make ownership cheap. The durable artifact nobody signed up to own is where production bills are born.",
+  author: 'Yusuf Tinwala',
   date: new Date('2026-05-30'),
   href: '/field-notes/ai-velocity-manufacturing-liabilities',
   comic: '/images/post01-comic.png',

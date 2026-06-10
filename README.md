@@ -5,7 +5,7 @@
 **Solving complicated engineering problems, frugally.**
 
 The source for **[farseertech.com](https://farseertech.com)** — the site and field notes of
-FarseerTech, an engineering practice run by Yusuf Tinwala.
+FarseerTech, a small engineering consultancy. Complicated problems, solved frugally.
 
 [![CI · Deploy](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml/badge.svg)](https://github.com/StrangerComeKnocking/farseertech/actions/workflows/deploy.yml)
 &nbsp;·&nbsp; [Live site](https://farseertech.com)
@@ -90,4 +90,4 @@ and runbook: **[docs/operations/](docs/operations/)**.
 
 ---
 
-<div align="center"><sub>© Yusuf Tinwala · FarseerTech</sub></div>
+<div align="center"><sub>© FarseerTech</sub></div>

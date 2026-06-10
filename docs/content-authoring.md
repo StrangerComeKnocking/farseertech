@@ -19,9 +19,13 @@ Today there is **one** bespoke field note. It has two halves:
 
 1. **Metadata** in `consts.ts` → `FEATURED` (and `FIELD_NOTES`), typed as `FieldNote`:
    `series`, `number`, `kicker`, `title`, `highlight` (the coral phrase **inside** the title),
-   `description`, `date`, `href`, `comic`. This drives the **home feature card**, **search**,
-   **RSS**, **`<head>`/JSON-LD**, and the **nav**. (Every field is required — the `FieldNote`
-   type means a missing one fails `npm run check`.)
+   `description`, `author`, `date`, `href`, `comic`. This drives the **home feature card**,
+   **search**, **RSS**, **`<head>`/JSON-LD**, and the **nav**. (Every field is required — the
+   `FieldNote` type means a missing one fails `npm run check`.)
+
+> **Author-name convention:** people's names appear **only** in article bylines/JSON-LD (via the
+> note's `author` field) and on the About page. The site chrome — footer ©, sidebar, home, meta
+> author — is company-only (`FarseerTech`). Don't reintroduce a personal name outside those two surfaces.
 2. **The page itself** at `src/pages/field-notes/<slug>.astro` — a self-contained Astro page with its
    own scoped `<style>` and a small lightbox script.
 
@@ -39,7 +43,8 @@ Until there are enough notes to justify a content collection, follow the same pa
 
 1. **Create the page** `src/pages/field-notes/<your-slug>.astro`. Start from the existing note as a
    template, or use a simpler layout — it just needs `<BaseLayout>` with a `title`, `description`,
-   `type="article"`, a JSON-LD object, and a `crumbs` array.
+   `type="article"`, a JSON-LD object (author = the note's `author`), a `crumbs` array, and a visible
+   **byline** under the headline (`By {NOTE.author} · {date}` — see the existing note's `.byline`).
 2. **Add its metadata** to `consts.ts` using the **`FieldNote`** type — so a missing field fails
    `npm run check` (and CI) instead of silently rendering `undefined`. Rename the existing `FEATURED`
    object to `NOTE_01`, then:
@@ -48,6 +53,7 @@ Until there are enough notes to justify a content collection, follow the same pa
      series: 'Paid in Production', number: '№ 02', kicker: 'Field Note',
      title: 'Your headline', highlight: 'the coral phrase inside the title',
      description: 'One or two sentences — powers the home card, search, RSS, and SEO.',
+     author: 'Full Name', // the visible byline + JSON-LD author
      date: new Date('YYYY-MM-DD'),
      href: '/field-notes/your-slug', comic: '/images/your-image.png',
    };
